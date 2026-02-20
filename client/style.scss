@@ -312,6 +312,11 @@ header{
 #sign_in{
     @include sign_in-up;
 }
+#SignUpSuccessfullText{
+    display: none;
+  font-family: var(--art-bigText);
+  color: var(--color-green);
+}
 #sign_in h3{
     @include sign_inUp_h3;
 }
@@ -527,7 +532,7 @@ header{
   border-color: var(--color-green);
 }
 #lobbyPlayerAkk{
-    display:block;
+    display:none;
     width: 100%;
     height: auto;
     margin-top: 50px;

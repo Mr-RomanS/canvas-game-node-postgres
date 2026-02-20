@@ -204,8 +204,8 @@ scullImg.onload = () => { scullImgLoaded = true; };
 const playerSadImg = new Image();
 playerSadImg.src = "./image/face-grin.svg";
 
-const playerNormImg = new Image();
-playerNormImg.src = "./hero2.png";
+// const playerNormImg = new Image();
+// playerNormImg.src = "./hero2.png";
 
 // флаг "хотя бы нормальная картинка загрузилась"
 let playerImgLoaded = false;

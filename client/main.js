@@ -14,6 +14,7 @@ const langRoot = document.getElementById('language_list');
 
 const signUp = document.getElementById('sign_up');
 const signIn = document.getElementById('sign_in');
+const signUpSuccessfullText = document.getElementById('SignUpSuccessfullText')
 
 const openSignUp = document.getElementById('openSignUp');
 const openSignIn = document.getElementById('openSignIn');
@@ -153,8 +154,6 @@ if (langBtnText) {
   langBtnText.textContent = initialLang.toUpperCase() ;
 }
 
-
-
 // 4) Выбор языка внутри попапа
 if (langPopup) {
   langPopup.addEventListener('click', (e) => {
@@ -179,11 +178,6 @@ if (langPopup) {
   });
 }
 
-
-
-
-
-
 /* =========================
   ОБРАБОТЧИКИ СОБЫТИЙ
    ========================= */
@@ -194,6 +188,7 @@ if (menuBtn) {
     toggleMenu();
   });
 }
+
 // 2) Кнопка X закрыть меню
 if (btnX_Menu) {
   btnX_Menu.addEventListener('click', () => {
@@ -307,15 +302,6 @@ function moveThemeCard(isLoggedIn) {
     }
 }
 
-
-
-
-
-
-
-
-
-
 function setupPasswordToggle(buttonId, wrapperId) {
   const btn = document.getElementById(buttonId);
   if (!btn) return;
@@ -376,34 +362,43 @@ if (savedPassword) {
 //-------Сохраняем значение из ввода в Local Storage.-----
 let isAuthenticated = false;
 
-signUpForm.addEventListener('submit', (event) =>{
-
+signUpForm.addEventListener('submit', async (event) =>{
 
   event.preventDefault();
 
-  const loginSub = loginInputSignUpForm.value;
-  const emailSub = emailInputSignUpForm.value;
-  const passwordSub = passwordInputSignUpForm.value;
+  const username = loginInputSignUpForm.value;
+  const email = emailInputSignUpForm.value;
+  const password = passwordInputSignUpForm.value;
 
-  localStorage.setItem('login', loginSub);
-  localStorage.setItem('email', emailSub);
-  localStorage.setItem('password', passwordSub);
+  try{
+    const response = await fetch('/register', {
+      method:'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, email, password}),
+    })
 
-  loginPlayer.textContent = loginSub;
-  emailPlayer.textContent = emailSub;
+    if(response.ok){
+      const message = await response.text();
+  
+      loginPlayer.textContent = username;
+      emailPlayer.textContent = email;
+      passwordPlayer.textContent = '*'.repeat(password.length);
 
-  passwordPlayer.textContent = '*'.repeat(passwordSub.length);
+      loginInputSignUpForm.value = '';
+      emailInputSignUpForm.value = '';
+      passwordInputSignUpForm.value = '';
 
-
-
-  loginInputSignUpForm.value = '';
-  emailInputSignUpForm.value = '';
-  passwordInputSignUpForm.value = '';
-
-  lobbyMenu.style.display = 'none'
-  lobbyPlayerAkk.style.display = 'block'
-
-  isAuthenticated = true;
+      showSignIn();
+      signUpSuccessfullText.style.display = 'block';
+      warningInCorrectPass.style.display = 'none';
+    }else{
+      const errorText = await response.text();
+      alert("Ошибка: " + errorText);
+    }
+  }catch(err){
+        console.error("Ошибка сети:", err);
+        alert("Не удалось связаться с сервером");
+  }
 
 })
 
@@ -436,31 +431,47 @@ btnShowPasswordAkk.addEventListener('click', () => {
 });
 
 //------- Форма  входа в аккаунт.----
-signInForm.addEventListener('submit', (event)=>{
+signInForm.addEventListener('submit', async (event)=>{
   event.preventDefault();
 
 
-  const logInEmail = logInEmailInput.value;
-  const logInPassword = logInPasswordInput.value;
+  const email = logInEmailInput.value;
+  const password = logInPasswordInput.value;
+
+  warningInCorrectPass.textContent = '';
 
   // Получаем сохранённые данные
-  const savedEmail = localStorage.getItem('email');
-  const savedPassword = localStorage.getItem('password');
+  try{
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({email, password}),
+    })
 
-   warningInCorrectPass.textContent = '';
+    if(response.ok){
+      const userData = await response.json();
 
-  if(
-    logInEmail === savedEmail && 
-    logInPassword === savedPassword
-  ){
-    isAuthenticated = true;
-    lobbyMenu.style.display = 'none'
-    lobbyPlayerAkk.style.display = 'block'
+      // Теперь мы можем отрисовать аккаунт данными ИЗ БАЗЫ
+      loginPlayer.textContent = userData.username;
+      emailPlayer.textContent = userData.email;
+      passwordPlayer.textContent = '********'; // Пароль мы не шлем, просто ставим звездочки
 
-    moveThemeCard(true);
-  }else{
-   warningInCorrectPass.textContent = 'Incorrect E-Mail or Password'
-  }
+      // Переключаем меню
+      isAuthenticated = true;
+      lobbyMenu.style.display = 'none';
+      lobbyPlayerAkk.style.display = 'block';
+      moveThemeCard(true);
+
+    }else{
+      const errorMsg = await response.text();
+      warningInCorrectPass.textContent = errorMsg;
+      warningInCorrectPass.style.display = 'block';
+    }
+  }catch (err) {
+        console.error("Ошибка входа:", err);
+        alert("Не удалось связаться с сервером");
+    }
+
   logInEmailInput.value = '';
   logInPasswordInput.value = '';
 })
@@ -507,8 +518,6 @@ changePasswordForm.addEventListener('submit', (event) =>{
   newPassPlayer.value = '';
 })
 
-
-
 togglePassImages.forEach(img => {
     img.addEventListener('click', () => {
         const input = img.previousElementSibling; // берём input рядом
@@ -521,10 +530,6 @@ togglePassImages.forEach(img => {
         }
     });
 });
-
-
-
-
 
 //-------Выходим из аккаунта.--------
 logoutButton.addEventListener('click', () => {
