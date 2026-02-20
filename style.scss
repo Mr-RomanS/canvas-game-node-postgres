@@ -1,0 +1,793 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+body{
+    width: 100%;
+    height: auto;
+}
+@font-face {
+  font-family: "Sour Gummy";
+  src: url("fonts/Sour_Gummy/SourGummy-VariableFont_wdth\,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Comic Relief";
+  src: url("fonts/Comic_Relief/ComicRelief-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+    --radius-sm: 5px;
+    --radius-md: 10px;
+    --radius-lg: 20px;
+
+    --color-bg-menu: #fffad6;
+    --color-accent: rgb(255, 235, 171);
+    --color-accent-hover: rgb(255, 216, 86);
+    --color-bg-canvas: #2A241B;
+    --color-icon-button:rgb(154, 103, 75);
+
+    --transition-fast: border-color 0.3s ease;
+
+    --art-bigText: "Sour Gummy", sans-serif;
+    --art-normalText: "Comic Relief", system-ui, "Comic Sans MS", "Comic Sans", "Apple Chancery", sans-serif;
+    --content-max: 1600px;
+
+
+    --color-green:#4b941d;
+    --color-green-hover:#57a825;
+    --bg-dark: #1E1B16;
+    --bg-light: #E8D7B2;
+
+    --gold: #C9A44C;
+    --gold-hover: #B08D3B;
+
+    --danger: #8B1E1E;
+    --magic: #4B3C6E;
+
+    --text-dark: #1A1A1A;
+    --text-light: #EDE6D6;
+}
+@mixin btnAktiv{
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px var(--gold-hover);
+}
+@mixin inputSize{
+    width: 100%;
+    height: 40px;
+    margin-bottom: 5px;
+    padding: 10px;
+    font-size: large;
+    font-family: var(--art-normalText);
+    border: 2px solid var(--color-accent-hover);
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent);
+}
+@mixin sign_in-up{
+    width: 100%;
+    padding: 10px;
+    display: none;
+    border: 2px solid var(--color-accent-hover);
+    border-radius: var(--radius-md);
+}
+@mixin buttonSign{
+    width: 100%;
+    height: 40px;
+    border: none;
+    font-size:large;
+    font-family: var(--art-normalText);
+    border-radius: var(--radius-md);
+    background-color: var(--color-green);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+@mixin sign_inUp_h3{
+    width: auto;
+    margin: 5px;
+    font-size: 25px;
+    font-family: var(--art-bigText);
+}
+// ------Navigation Menu ---------
+header{
+    max-width:var(--content-max);
+    height: 80px;
+    border: 1px solid black;
+    background-color: #F3E6C8;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0 0  var(--radius-lg)var(--radius-lg);
+
+}
+#logo{
+    margin-left: 20px;
+    line-height: 0.5;
+}
+#logo-main{
+  font-size: 30px;
+  line-height: 1;
+  display: inline-block;
+  font-family:var(--art-bigText);
+}
+#logo-sub{
+  font-size: 0.8em;
+  line-height: 1;
+  display: inline-block;
+  font-family: var(--art-bigText)
+}
+#headerBlock{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#spanMenu{
+    color: var(--bg-dark);
+    font-size: 40px;
+    font-family: var(--art-bigText);
+}
+#MenubBtn{
+    border: none;
+    margin-right: 20px;
+    background-color: transparent;
+}
+#btn_Menu{
+    display: flex;
+    align-items: center;
+    height: 60px;
+    color: var(--color-icon-button);
+    border: 2px solid rgb(214, 222, 230);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.3s ease;
+    z-index: 1000;
+}
+#btn_Menu:hover{
+    border: 2px solid gray; 
+    box-shadow: -1px 2px 2px  rgba(255, 255, 255, 0.87);
+}
+#btn_Menu:active{
+    @include btnAktiv;
+}
+#langBtn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: 50px;
+    padding: 5px;
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-family: var(--art-bigText) ;
+    background-color: transparent;
+    gap: 8px;
+}
+#langBtn img{
+    width: 25px;
+}
+#langBtn:hover{
+    border: 2px solid rgb(214, 222, 230);
+}
+#langBtn:active{
+    @include btnAktiv;
+}
+#langPopup{
+    position: absolute;
+    width: 200px;
+    height: auto;
+    padding:  5px;
+    border-radius: var(--radius-md);
+    background-color: var(--text-light);
+    z-index: 1000;
+}
+#langPopup button{
+    width: 190px;
+    height: 50px;
+    border: none;
+    padding: 10px;
+    border: 1px solid var(--bg-dark);
+    text-align: left;
+    font-family: var(--art-normalText);
+    font-size: 15px;
+    border-radius: var(--radius-md);
+    margin-bottom: 5px;
+    background-color: transparent;
+}
+#langPopup button:hover{
+    background-color: var(--bg-light);
+}
+
+
+/* Само меню */
+#sideMenu{
+    width:400px;
+    height: 100vh;
+    background-color: var(--color-bg-menu);
+    position: fixed;
+    top: 0;
+    right: max(0px, 50% - 800px);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    padding: 10px;
+    padding-top: 30px;
+    overflow-y: scroll;
+    visibility: hidden;
+    pointer-events: none;
+}
+#sideMenu.active {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+}
+#btnX_Menu{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 2px solid rgb(214, 222, 230);
+    border-radius: var(--radius-sm);
+    font-size: 20px;
+    color: var(--color-icon-button);
+    z-index: 1002;
+    background-image: url(images/menu_icons/x-solid-full.svg);
+    flex: 0 0 auto;
+    transition: var(--transition-fast);
+}
+#btnX_Menu:hover{
+    border: 2px solid lightslategray;
+    border-radius: 5px;
+}
+#btnX_Menu:active{
+    transform: translateY( 2px);
+}
+#lobbyMenu{
+    display:block;
+}
+#sideMenu ul {
+    list-style: none;
+    width: 100%;
+    flex: 1 1 auto;
+}
+#sideMenu ul li{
+    margin: 10px 0 10px 0;
+}
+#register{
+    width: 100%;
+    height: auto;
+    background-color:var(--color-green);
+    border-radius: var(--radius-md);
+    padding: 10px;
+}
+#register h2{
+    color: var(--text-light);
+    font-family: var(--art-bigText);
+}
+#register p{
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-light);
+    font-family: var(--art-normalText);
+}
+#regDiv{
+    display: flex;
+}
+
+
+#openSignUp,
+#openSignIn{
+    margin-left: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-family: var(--art-normalText);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+#openSignUp{
+    font-size: 18px;
+    background-color: var(--color-accent);
+}
+#openSignUp:hover{
+    background-color: var(--color-accent-hover);
+}
+#openSignIn{
+    font-size: 15px;
+    background-color: transparent;
+}
+#openSignIn:hover{
+    background-color: rgba(0, 0, 0, 0.166);
+}
+#openSignUp:active,
+#openSignIn:active{
+    @include btnAktiv;
+}
+#sign_in{
+    @include sign_in-up;
+}
+#sign_in h3{
+    @include sign_inUp_h3;
+}
+#sign_in input[type="email"],
+#sign_in input[type="password"],
+#sign_in input[type="text"]{
+    @include inputSize;
+}
+#lobbyPlayerAkk input:focus,
+#lobbyMenu input:focus{
+    background-color: white;
+    border: 2px solid var(--gold-hover);
+    outline: none;
+    
+}
+#btnSignIn{
+    @include buttonSign;
+}
+#btnSignIn:hover{
+    background-color: var(--color-green-hover);
+}
+#btnSignIn:active {
+    @include btnAktiv;
+}
+.viaLog{
+    margin-top: 15px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+.viaLog h4{
+    width: auto;
+    font-size: 15px;
+    margin: 10px;
+    font-family: var(--art-normalText);
+}
+.viaLog a img{
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    box-shadow: 0px 0px 5px gray;
+    background-color: black;
+}
+.viaLog a img:active{
+    box-shadow: 0px 0px 10px var(--gold);
+}
+#sign_up{
+   @include sign_in-up;
+}
+#sign_up h3{
+   @include sign_inUp_h3;
+}
+#sign_up h4{
+    font-size: 12px;
+    font-family: var(--art-normalText);
+}
+#sign_up input[type="email"],
+#sign_up input[type="password"],
+#sign_up input[type="text"]{
+    @include inputSize;
+}
+#sign_in input:not([type="checkbox"]):active,
+#sign_up input:not([type="checkbox"]):active {
+    background-color: var(--color-accent-hover);
+}
+#sign_up input:focus {
+    background-color: white;
+}
+#iconPassIn,
+#iconPassUp{
+  position: relative;
+  width: 100%;
+}
+#iconPassIn input,
+#iconPassUp input{
+  width: 100%;
+  padding-right: 44px;
+}
+#btnPassIconIn,
+#btnPassIconUp{
+  position: absolute;
+  right: 10px;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  left: auto;
+}
+#btnPassIconIn:hover,
+#btnPassIconUp:hover{
+  color: var(--text-dark);
+}
+#btnPassIconIn:focus,
+#btnPassIconUp:focus{
+  outline: none;
+}
+#warningInCorrectPass{
+    width: auto;
+    font-family: var(--art-normalText);
+    color: var(--danger);
+    font-size: 15px;
+    padding: 0 10px ;
+}
+#passForgot{
+    width: auto;
+    font-family: var(--art-normalText);
+    font-size: 15px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    padding: 5px;
+    margin: 5px;
+}
+#passForgot:active{
+    border: 1px solid var(--color-green);
+}
+.agree-row{
+    margin:5px 5px;
+}
+#agree{
+    width: 25px;
+    height: 25px;
+    accent-color: var(--color-green);
+    font-size: 14px;
+    line-height: 1;
+}
+.IAgreeText{
+    font-size: 15px;
+    font-weight: bolder;
+    font-family: "Comic Sans MS", "Comic Sans", "Apple Chancery";
+}
+#btnSignUp{
+    @include buttonSign;
+}
+#btnSignUp:active {
+    @include btnAktiv;
+}
+#sign_in.active,
+#sign_up.active {
+    display: block;
+}
+
+//--------Rules ----------
+#rules{
+    width: 100%;
+    height: auto;
+}
+#rules button{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding: 0 12px;
+    border: 2px solid var(--color-accent-hover);
+    border-radius: var(--radius-md);
+    font-size: large;
+    font-family: var(--art-normalText);
+    background-color: var(--color-accent);
+    gap: 8px;
+}
+#rules img{
+    width: 30px;
+}
+#rules button:hover{
+    background-color: var(--color-accent-hover);
+}
+#rules button:active{
+    border: 2px solid var(--color-accent);
+}
+//-------- Bg BODY ----------
+#themeCard{
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--color-accent-hover);
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent);
+}
+#themeCard h3{
+  margin: 5px;
+  font-size: 18px;
+  font-family: var(--art-normalText);
+}
+#themeGrid{
+  display: flex;
+ justify-content: space-around;
+  gap: 10px;
+  padding: 5px;
+}
+.themeColor{
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  border: 2px solid rgba(0,0,0,0.25);
+  cursor: pointer;
+  background: var(--c, #000);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.themeColor:hover{
+  transform: translateY(-1px);
+}
+.themeColor:active{
+  transform: translateY(1px);
+}
+.themeColor.selected{
+  box-shadow: 0 0 0 3px rgba(75, 148, 29, 0.35);
+  border-color: var(--color-green);
+}
+#lobbyPlayerAkk{
+    display:block;
+    width: 100%;
+    height: auto;
+    margin-top: 50px;
+    padding: 60px  10px 20px 10px;
+    position: relative;
+    border: 2px solid var(--color-accent-hover);
+    border-radius: var(--radius-md);
+}
+#lobbyPlayerAkk hr{
+    margin:  20px 0px;
+}
+#avatarLabel{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 2px solid var(--color-accent-hover);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: block;
+}
+#avatarPlayer{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+#avatarHint{
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+
+  background: rgba(0,0,0,0.5);
+  font-family: var(--art-normalText);
+  font-size: 14px;
+  color: white;
+
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+#avatarLabel:hover #avatarHint{
+  opacity: 1;
+
+}
+.namePlayer p {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: var(--art-bigText);
+    margin: 10px 0 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.namePlayer span{
+    font-size: 16px;
+    align-content: center;
+    font-family: var(--art-normalText);
+}
+#btnShowPasswordAkk{
+  display: flex;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  left: auto;
+}
+#newLoginMessage{
+    width: auto;
+    font-family: var(--art-normalText);
+    font-size: 15px;
+    color: var(--danger);
+}
+#changeNameForm,
+#changePasswordForm{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+#changeNameForm input,
+#changePasswordForm input{
+    @include inputSize;
+}
+#changeNameForm label,
+#changePasswordForm label{
+    font-family: var(--art-bigText);
+}
+#changeNameForm button,
+#changePasswordForm button{
+    @include buttonSign;
+}
+#changeNameForm button:hover,
+#changePasswordForm button:hover{
+  background-color: var(--color-green-hover);
+}
+#changeNameForm button:active,
+#changePasswordForm button:active{
+  @include btnAktiv;
+}
+#passwordMessage{
+    width: auto;
+    font-family: var(--art-normalText);
+    font-size: 15px;
+}
+.password-field {
+    position: relative;
+    width: 100%;
+}
+.password-field input {
+    width: 100%;
+    padding-right: 40px;
+}
+.password-field img.toggle-pass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    cursor: pointer;
+}
+#logoutButton{
+    margin-top:20px; 
+    @include buttonSign;
+    background-color: var(--danger);
+}
+#logoutButton:active{
+    @include btnAktiv;
+}
+#deleteP{
+    margin-top: 20px;
+    font-size: 15px;
+    font-family: var(--art-bigText);
+}
+#bthDelete{
+    width: 50% !important;
+    background-color: #000 !important;
+    color: white;
+     @include buttonSign;
+}
+#bthDelete:active{
+  color: var(--danger);
+}
+
+
+
+
+//--------- Lobby Screen ----------
+#lobbyScreen{
+  position: relative;
+  max-width: var(--content-max) ;
+  height: calc(100vh - 80px);
+  display: block;
+  margin: auto;
+  border-radius: var(--radius-lg);
+  background-size: cover;      /* аналог object-fit: cover */
+  background-position: center; /* центр */
+  background-repeat: no-repeat;
+
+  overflow: hidden; /* Обрезает всё, что выходит за границы */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#btn_playNow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    width: auto;
+    height: 60px;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-left: 0.7px solid white;
+    border-right: 0.7px solid white;
+    border-radius: 55px;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%,0);
+    color: white;
+    font-size: 30px;
+    font-family: var(--art-bigText);
+    background-color: rgba(0, 0, 0, 0.882);
+}
+#btn_playNow img {
+    width: 50px;
+}
+#btn_playNow:active{
+    border: 2px solid var(--text-light);
+    transform: translate(-50%, 2px);
+}
+.back-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%; 
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  
+  /* Магия здесь: */
+  object-fit: cover; /* Растягивает видео, сохраняя пропорции, чтобы заполнить блок */
+  object-position: center; /* Всегда центрирует видео по вертикали и горизонтали */
+  
+  transform: translate(-50%, -50%); /* Дополнительная подстраховка для центровки */
+  z-index: -1;
+}
+
+
+// //-----------------Canvas-----------------
+
+#canvas{
+    display: none;
+    margin: auto;
+    margin-top: 10px;
+    border: 2px solid var(--gold);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 10px lightslategray;
+}
+
+#countersBox{
+    width: 600px;
+    height: auto;
+    margin: auto;
+    background-color: var(--bg-light);
+    border-radius: var(--radius-lg);
+    display: none;
+    justify-content: space-between;
+    padding: 10px;
+}
+#countersBox>div>span{
+    margin: 0px 5px 0px 0px;
+}
+.counter{
+    font-size: 20px;
+    font-family: var(--art-grossText);
+}
+.fa-heart{
+    color: #8B1E1E;
+}
+.fa-sack-dollar{
+   color: var(--color-green);
+}
+.fa-key{
+    color: var(--gold);
+}
+.fa-scroll{
+    color: beige;
+}
+.fa-stopwatch{
+    color: gray;
+}

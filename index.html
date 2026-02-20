@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- links -->
+    <link rel="icon" type="image/svg" sizes="32x32" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+
+    <title >Labyrint game</title>
+</head>
+<body>
+
+
+<header>
+        <p id="logo">
+            <span id="logo-main">Labyrinth</span><br> 
+            <span id="logo-sub">game</span>
+        </p>
+
+        <div id="headerBlock">
+            <div id="language_list">
+                <button id="langBtn" type="button">
+                    <img src="images/menu_icons/globe-solid-full.svg" alt="globe">
+                    <span id="langBtnText" data-i18n="langBtnText">Language</span>
+                </button>
+
+                <div id="langPopup" hidden>
+                    <button type="button" data-lang="en">EN - English</button>
+                    <button type="button" data-lang="ua">UA - Українська</button>
+                    <button type="button" data-lang="de">DE - Deutsch</button>
+                </div>
+            </div>
+
+            <span id="spanMenu" data-i18n="TextMenu">Menu</span>
+            <button id="MenubBtn"> <img id="btn_Menu" src="images/menu_icons/bars-solid-full.svg" alt="menu icons"> </button> 
+        </div>
+    
+    </header>
+
+
+<nav id="sideMenu">
+    <button id="btnX_Menu" type="button"></button>
+
+    <ul id="lobbyMenu">
+        <li id="register">
+            <h2 data-i18n="lobbyMenuH2">Save Progress</h2>
+            <p data-i18n="lobbyMenuP">Sign up to save your progress or log into an existing account</p>
+            <br>
+
+            <div id="regDiv">
+                <button id="openSignUp" data-i18n="SignUpBtn">Sign up</button>
+                <button id="openSignIn" data-i18n="SignInBtn">Sign in</button>
+            </div>
+        </li>
+        <li id="sign_in">
+            <h3 data-i18n="SignInH3">Sign in</h3>
+
+        <form id="signInForm" autocomplete="on" novalidate>
+                <input
+                id="logInEmailInput"
+                type="email"
+                name="email"
+                placeholder="E-mail"
+                autocomplete="email"
+                maxlength="64"
+                required
+                >
+    <p id="warningInCorrectPass"></p>
+        <div id="iconPassIn">
+            <input
+            id="logInPasswordInput"
+            type="password"
+            name="password"
+            placeholder="Password"
+            minlength="8"
+            maxlength="20"
+            autocomplete="current-password"
+            required
+            >    
+            <button id="btnPassIconIn" type="button" aria-label="Show password">
+                <img src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-solid-icon">
+            </button>
+        </div>
+        <button id="passForgot" type="button" data-i18n="forgotPassBtn">Forgot your Password?</button>
+        <button id="btnSignIn" type="submit" data-i18n="SignInBtn">Sign In</button>
+
+        <div class="viaLog">        
+            <h4 data-i18n="H4SignVia">Sign in via:</h4>
+            <a href="#"><img src="image/inst.png" alt="Instagramm Icon"></a>
+        </div>
+
+      </form>
+        </li>
+
+    <li id="sign_up">
+    <h3 data-i18n="SignUpH3">Sign up</h3>
+
+        <form id="signUpForm" autocomplete="on" >
+
+        <input
+            id="loginInputSignUpForm"
+            type="text"
+            name="text"
+            placeholder="Login"
+            maxlength="20"
+            required
+        >
+
+        <input
+            id="emailInputSignUpForm"
+            type="email"
+            name="email"
+            placeholder="E-mail"
+            autocomplete="email"
+            maxlength="64"
+            required
+        >
+
+        <h4 data-i18n="H4WarnungPass">Create a password 8-20 alphanumeric characters</h4>
+
+
+        <div id="iconPassUp">
+            <input
+            id="passwordInputSignUpForm"
+            type="password"
+            name="password"
+            placeholder="Password"
+            minlength="8"
+            maxlength="20"
+            autocomplete="new-password"
+            required
+        >    
+            <button id="btnPassIconUp" type="button" aria-label="Show password">
+                <img  src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-solid-icon">
+            </button>
+            </div>
+
+        
+
+        <div class="agree-row">
+            <input type="checkbox" id="agree" name="agree" required>
+            <label for="agree" >
+                 <span class="IAgreeText" data-i18n="SpanLabelAgree1">I agree to the Privacy Policy</span> <br>
+                <span class="IAgreeText" data-i18n="SpanLabelAgree2">and Terms of Service</span>
+            </label>
+        </div>
+
+        <button id="btnSignUp" type="submit" data-i18n="btnSignUp">Sign Up</button>
+        <div class="viaLog">        
+            <h4>Sign in via:</h4>
+            <a href="#"><img src="images/menu_icons/circle-user-solid-full.svg" alt="Icon"></a>
+        </div>
+    </form>
+    </li>
+
+        <hr>
+    <li id="rules">
+        <button id="rulesBtn" type="button">
+        <img src="images/menu_icons/book-bookmark-solid-full.svg" alt="">
+         <span data-i18n="RulesSpan">Rules</span>
+      </button>
+    </li>
+            <hr>
+        <li id="themeCard">
+        <h3 data-i18n="themeCardH3">Background</h3>
+
+        <div id="themeGrid" aria-label="Background color">
+            <button type="button" class="themeColor" data-bg="black" aria-label="Black"></button>
+            <button type="button" class="themeColor" data-bg="#2A241B" aria-label="Dark"></button>
+            <button type="button" class="themeColor" data-bg="#8B1E1E" aria-label="Danger"></button>
+            <button type="button" class="themeColor" data-bg="#2E5E2E" aria-label="Green"></button>
+            <button type="button" class="themeColor" data-bg="rgb(154, 103, 75)" aria-label="Beige"></button>
+            <button type="button" class="themeColor" data-bg="white" aria-label="White"></button>
+        </div>
+    </li>
+</ul>
+
+
+
+
+    <ul id="lobbyPlayerAkk">
+        <li id="akkLogo">
+            <input
+                type="file"
+                id="avatarInput"
+                accept="image/*"
+                hidden
+            >
+        <label id="avatarLabel" for="avatarInput" aria-label="Upload avatar">
+            <img id="avatarPlayer" src="images/menu_icons/circle-user-solid-full.svg" alt="Avatar">
+            <span id="avatarHint" data-i18n="ChangeAvatarLabel">Change</span>
+        </label>
+        </li>
+        <li class="namePlayer">
+            <p> <span data-i18n="loginPlayerAkk">Login:</span> <span id="loginPlayer"></span></p>
+            <p> <span data-i18n="EmailPlayerAkk">E-Mail:</span> <span id="emailPlayer"></span></p>
+            <p>
+                <span data-i18n="PassPlayerAkk">Password: </span>
+                
+                <span id="passwordPlayer"></span> 
+                <button id="btnShowPasswordAkk" type="button" aria-label="Show password">
+                <img  src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-solid-icon">
+                </button>
+            </p>
+        </li>
+        <hr>
+        <li>
+            <form id="changeNameForm" >
+                <label data-i18n="changeNameLabel">Change your Login</label>
+                <p id="newLoginMessage"></p>
+                <input type="text" minlength="3" maxlength="20" id="loginPlayers">
+                <button type="submit" data-i18n="changeBtnLogin">Change</button>
+            </form>
+            <hr>
+
+            <form id="changePasswordForm">
+
+            <label data-i18n="OldPasswordLabel">Old Password</label>
+            <p id="passwordMessage"></p>
+            <div class="password-field">
+                <input type="password" minlength="8" maxlength="20" id="oldPassPlayer">
+                <img src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-button" class="toggle-pass">
+            </div>
+
+            <label><span data-i18n="NewPasswordLabel1">New Password</span><br> <span data-i18n="NewPasswordLabel2">(8-20 alphanumeric characters)</span>  </label>
+            <div class="password-field">
+                <input type="password" minlength="8" maxlength="20" id="newPassPlayer">
+                <img src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-button" class="toggle-pass">
+            </div>
+
+                <button type="submit" data-i18n="changeBtnPass">Change</button>
+        </form>
+
+
+        </li>
+        <hr>
+        <li>
+            <button id="logoutButton" type="button" data-i18n="LogoutBtn">Logout</button>
+            <p id="deleteP" data-i18n="DeleteP">Delete Account?</p>
+            <button id="bthDelete" type="button" data-i18n="DeleteBtn">Delete</button>
+        </li>
+</ul>
+    </nav>
+
+
+    <section id="lobbyScreen">
+        <video autoplay muted loop playsinline poster="images/poster.png" class="back-video">
+    <source src="background.mp4!" type="video/mp4">
+    Ваш браузер не поддерживает теги видео.
+        </video>
+        <button id="btn_playNow" ><span data-i18n="ButtonPlay">Play Now</span><img src="images/menu_icons/play-solid-full.svg" alt="Play Icon"></button>
+    </section>
+
+   <section id="gameScreen">
+        <p>X</p>
+    <div id="zehlerX">0</div>
+    <p>Y</p>
+    <div id="zehlerY">0</div>
+        <div id="countersBox">
+            <div id="lifeCounter" class="counter">Life: <span id="spanCounterLife">3</span><i class="fa-solid fa-heart"></i></div>
+            <div id="bonusCounter" class="counter">Bonus: <span id="spanCounterBonus">0</span><i class="fa-solid fa-sack-dollar"></i></i></div>
+            <div id="keyCounter" class="counter">Key: <span id="spanCounterKey">0</span><i class="fa-solid fa-key"></i></div>
+            <div id="levelCounter" class="counter">Level: <span id="spanCounterLevel">1</span><i class="fa-solid fa-star"></i></div>
+            <div id="tryCounter" class="counter">Try: <span id="spanCounterTry">1</span><i class="fa-solid fa-scroll"></i></div>
+            <div id="timeCounter" class="counter">Time: <span id="spanCounterTime">0</span><i class="fa-solid fa-stopwatch"></i></div>
+        </div>
+        
+
+            <canvas id="canvas" width="700" height="420" style="background-color: aqua;"></canvas>
+    </section>
+
+    <script type="module" src="game_ part/main.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
