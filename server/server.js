@@ -21,7 +21,7 @@ app.use(express.json());
 const session = require('express-session');
 
 app.use(session({
-    secret: 'qwerty', // любая длинная строка
+    secret: process.env.SESSION_PASSWORD, // любая длинная строка
     resave: false,
     saveUninitialized: false,
     cookie: { 
@@ -119,3 +119,16 @@ app.post('/update-username', async (req, res) =>{
         res.status(500).send('Ошибка при обновлении в базе данных');
     }
 })
+
+app.post('/logout', (req, res) => {
+    // Команда destroy полностью удаляет сессию из "блокнота" сервера
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Ошибка при выходе:', err);
+            return res.status(500).send('Не удалось выйти');
+        }
+        // Очищаем куку в браузере пользователя
+        res.clearCookie('connect.sid'); 
+        res.status(200).send('Выход выполнен успешно');
+    });
+});
