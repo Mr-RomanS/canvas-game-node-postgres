@@ -18,6 +18,27 @@ app.use(express.static(path.join(__dirname, '../client')));
 // 5. Позволяем серверу понимать JSON, который присылает твой fetch
 app.use(express.json());
 
+const session = require('express-session');
+
+app.use(session({
+    secret: 'qwerty', // любая длинная строка
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false, // ставь true только если у тебя HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // кука будет жить 1 день
+    }
+}));
+
+
+app.get('/check-auth', (req, res) => {
+    if (req.session.user) {
+        res.status(200).json(req.session.user);
+    } else {
+        res.status(401).send('Не авторизован');
+    }
+});
+
 // 6. Запускаем "прослушку" порта
 app.listen(PORT, () => {
     console.log(`Сервер ожил! Слушаю на http://localhost:${PORT}`);
@@ -64,17 +85,37 @@ app.post('/login', async (req,res)=>{
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
 
-    if(isMatch){
-        res.status(200).json({
-            username: user.username,
-            email: user.email,
-        })
-    }else {
-        res.status(401).send('Неверный Email или пароль');
-    }
+    if (isMatch) {
+    req.session.user = {
+        username: user.username,
+        email: user.email
+    };
+    res.status(200).json(req.session.user);
+}
     }catch (err) {
         console.error(err);
         res.status(500).send('Ошибка сервера при входе');
     }
     
+})
+
+app.post('/update-username', async (req, res) =>{
+    try{
+        const { newUsername, email} = req.body;
+
+        if(!newUsername){
+            return res.status(400).send('Логин не может быть пустым')
+        }
+
+        const queryText = 'UPDATE users SET username = $1 WHERE email = $2';
+        const result = await dbClient.query(queryText, [newUsername, email]);
+
+        if(result.rowCount > 0) {
+            res.status(200).send('Логин успешно изменен');
+        }else{
+            res.status(404).send('Пользователь не найден');
+        }
+    }catch (err) {
+        res.status(500).send('Ошибка при обновлении в базе данных');
+    }
 })

@@ -62,6 +62,27 @@ let lastUrl = null;
 const savedLang = localStorage.getItem('lang');
 const savedBg = localStorage.getItem('bgColor');
 
+// Как только страница загрузилась, спрашиваем сервер: "Ты меня помнишь?"
+const checkAuth = async () => {
+    try {
+        const response = await fetch('/check-auth');
+        if (response.ok) {
+            const userData = await response.json();
+            // Если сервер узнал нас — сразу рисуем аккаунт
+            loginPlayer.textContent = userData.username;
+            emailPlayer.textContent = userData.email;
+            passwordPlayer.textContent = '********';
+            
+            lobbyMenu.style.display = 'none';
+            lobbyPlayerAkk.style.display = 'block';
+            moveThemeCard(true);
+        }
+    } catch (err) {
+        console.log("Пользователь не авторизован");
+    }
+};
+
+checkAuth(); // Запускаем проверку
 
 /* =========================
   МЕНЮ: открыть/закрыть
@@ -478,20 +499,47 @@ signInForm.addEventListener('submit', async (event)=>{
 
 
 //----- сменa логина в аккаунт.
-changeNameForm.addEventListener('submit', (event) => {
+changeNameForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
     const newLogin = loginPlayers.value.trim();
+    const currentEmail = emailPlayer.textContent;
+
     newLoginMessage.textContent = '';
-    if (newLogin === '') {
-      newLoginMessage.textContent = 'Login cannot be empty'
-    }else{
-      newLoginMessage.textContent = 'Successfully';
-      newLoginMessage.style.color = 'green';
+
+    if(newLogin === ''){
+      newLoginMessage.textContent = 'Login cannot be empty';
+      newLoginMessage.style.color = 'red';
+      return;
     }
-    localStorage.setItem('login', newLogin);
-    loginPlayer.textContent = newLogin;
-    loginPlayers.value = '';
+
+    try{
+      const response = await fetch('/update-username',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          newUsername: newLogin,
+          email: currentEmail,
+        })
+      });
+
+      if(response.ok){
+        newLoginMessage.textContent = 'Successfully update in database';
+        newLoginMessage.style.color = 'green';
+
+        loginPlayer.textContent = newLogin;
+
+        loginPlayers.value = '';
+      }else{
+        const errorText = await response.text();
+        newLoginMessage.textContent = 'Error: ' + errorText;
+        newLoginMessage.style.color = 'red';
+      }
+    }catch(err){
+      console.error('Ошибка при смене имени:', err);
+      newLoginMessage.textContent = 'Server connection error';
+      newLoginMessage.style.color = 'red';
+    }
 });
 
 changePasswordForm.addEventListener('submit', (event) =>{
