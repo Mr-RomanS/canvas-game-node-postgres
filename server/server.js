@@ -3,6 +3,9 @@ const express = require('express');// 1. Подключаем библиотек
 const path = require('path'); // Встроенный модуль для работы с путями
 const { Client } = require('pg');// pg — «переводчик» для работы с базой PostgreSQL.
 const bcrypt = require('bcrypt'); // библиотека шифровки пароля!
+const multer = require('multer'); //для безопасности и надежности загрузки файлов в Node.js.
+const fs = require('fs');
+
 require('dotenv').config();
 
 // 2. Создаем экземпляр нашего приложения (сервера)
@@ -120,14 +123,6 @@ app.post('/update-username', async (req, res) =>{
     }
 })
 
-app.get('/check-auth', (req,res)=>{
-    if(req.session.user){
-        res.status(200).json(req.session.user);
-    }else{
-        res.status(401).send('Unauthorizired');
-    }
-})
-
 app.post('/logout', (req, res) => {
     // Команда destroy полностью удаляет сессию из "блокнота" сервера
     req.session.destroy((err) => {
@@ -139,4 +134,77 @@ app.post('/logout', (req, res) => {
         res.clearCookie('connect.sid'); 
         res.status(200).send('Выход выполнен успешно');
     });
+});
+
+
+//------Настройка места хранения---- Авто-создание папки, если её нет
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir);
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir); // Используем абсолютный путь
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+//  Фильтр безопасности: только изображения
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype.startsWith('image/')){
+        cb(null, true);
+    }else{
+        cb(new Error('Недопустимый тип файла! Только изображения.'), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // Ограничение 5 МБ
+})
+
+app.use('/uploads', express.static(uploadDir));
+app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
+    try {
+        if (!req.session.user) return res.status(401).send('Не авторизован');
+        if (!req.file) return res.status(400).send('Файл не выбран или слишком велик');
+
+        const userEmail = req.session.user.email;
+        const newAvatarUrl = `/uploads/${req.file.filename}`;
+
+        // 1. Ищем старую аватарку в БД
+        const userResult = await dbClient.query('SELECT avatar_url FROM users WHERE email =$1', [userEmail]);
+        const oldAvatarUrl = userResult.rows[0]?.avatar_url;
+
+        // 2. Удаляем старый файл, если он есть
+        if (oldAvatarUrl) {
+            // Убираем / в начале (/uploads/file.jpg -> uploads/file.jpg)
+            const relativePath = oldAvatarUrl.startsWith('/') ? oldAvatarUrl.slice(1) : oldAvatarUrl;
+            const oldPath = path.join(__dirname, relativePath);
+
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+                console.log(`Удален старый аватар: ${oldPath}`);
+            }
+        }
+
+        // 3. Обновляем БД и Сессию
+        await dbClient.query('UPDATE users SET avatar_url = $1 WHERE email = $2', [newAvatarUrl, userEmail]);
+        req.session.user.avatarUrl = newAvatarUrl;
+
+        res.status(200).json({ avatarUrl: newAvatarUrl });
+
+    } catch (err) {
+        console.error('Ошибка загрузки:', err);
+        // Если это ошибка Multer (например, файл большой), отправим понятный текст
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).send('Файл слишком большой! Максимум 2МБ.');
+        }
+        res.status(500).send('Ошибка сервера при загрузке аватара');
+    }
 });

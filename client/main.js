@@ -73,6 +73,10 @@ const checkAuth = async () => {
             emailPlayer.textContent = userData.email;
             passwordPlayer.textContent = '********';
 
+            if (userData.avatarUrl) {
+                avatarPlayer.src = userData.avatarUrl;
+            }
+
             isAuthenticated = true;
             
             if (lobbyMenu && lobbyPlayerAkk) {
@@ -180,7 +184,7 @@ if (langBtnText) {
   langBtnText.textContent = initialLang.toUpperCase() ;
 }
 
-// 4) Выбор языка внутри попапа
+// 4) Выбор языка внутри popUp
 if (langPopup) {
   langPopup.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-lang]');
@@ -247,12 +251,10 @@ if (openSignIn) {
     showSignIn();
   });
 }
-// 7) Клик вне блока языка — закрыть попап языка
+// 7) Клик вне блока языка — закрыть popUp 
 document.addEventListener('click', (e) => {
-  // Если элементов нет — просто ничего не делаем
   if (!langRoot) return;
 
-  // если кликнули НЕ внутри language_list — закрываем
   if (!langRoot.contains(e.target)) {
     closeLang();
   }
@@ -315,14 +317,10 @@ function moveThemeCard(isLoggedIn) {
 
     if (isLoggedIn) {
         if (lobbyPlayerAkk && logoutBtn) {
-            // Вставляем тему ПЕРЕД кнопкой логаута
             lobbyPlayerAkk.insertBefore(themeCard, logoutBtn.parentNode); 
-            // Используем parentNode, если кнопка лежит внутри <li>, 
-            // чтобы блок темы стал отдельным пунктом списка
         }
     } else {
         if (lobbyMenu && rulesBlock) {
-            // Возвращаем на место перед правилами в основном меню
             lobbyMenu.insertBefore(themeCard, rulesBlock);
         }
     }
@@ -361,15 +359,31 @@ setupPasswordToggle('btnPassIconIn', 'iconPassIn');
 
 
 //-------Меняем аватарку внутри аккаунта.----
-avatarInput.addEventListener('change', () => {
+avatarInput.addEventListener('change', async () => {
   const file = avatarInput.files && avatarInput.files[0];
-  if (!file) return;
-  if (!file.type.startsWith('image/')) return;
-
-  if (lastUrl) URL.revokeObjectURL(lastUrl);
-
-  lastUrl = URL.createObjectURL(file);
-  avatarPlayer.src = lastUrl;
+  if(!file){
+    return;
+  }
+  // FormData — специальный объект для отправки файлов
+  const formData = new FormData();
+  formData.append('avatar', file);
+  
+  try{
+    const response = await fetch('/upload-avatar', {
+      method: 'POST',
+      body: formData,// Заголовки Content-Type fetch поставит сам для FormData
+    });
+    if(response.ok){
+      const data = await response.json();
+      // Обновляем аватарку на странице ссылкой с сервера
+      avatarPlayer.src = data.avatarUrl;
+    }else{
+      const error = await response.text();
+      alert('Ошибка загрузки: ' + error);
+    }
+  }catch (err) {
+        console.error('Ошибка сети:', err);
+    }
 });
 
 
