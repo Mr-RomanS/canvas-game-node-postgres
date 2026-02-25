@@ -62,27 +62,32 @@ let lastUrl = null;
 const savedLang = localStorage.getItem('lang');
 const savedBg = localStorage.getItem('bgColor');
 
-// Как только страница загрузилась, спрашиваем сервер: "Ты меня помнишь?"
 const checkAuth = async () => {
     try {
         const response = await fetch('/check-auth');
+        
         if (response.ok) {
             const userData = await response.json();
-            // Если сервер узнал нас — сразу рисуем аккаунт
+
             loginPlayer.textContent = userData.username;
             emailPlayer.textContent = userData.email;
             passwordPlayer.textContent = '********';
+
+            isAuthenticated = true;
             
-            lobbyMenu.style.display = 'none';
-            lobbyPlayerAkk.style.display = 'block';
-            moveThemeCard(true);
+            if (lobbyMenu && lobbyPlayerAkk) {
+                lobbyMenu.style.display = 'none';
+                lobbyPlayerAkk.style.display = 'block';
+                moveThemeCard(true); 
+            }
         }
     } catch (err) {
-        console.log("Пользователь не авторизован");
+        console.log("Сессия не найдена. Пользователь не авторизован.");
     }
 };
 
-checkAuth(); // Запускаем проверку
+// Вызываем функцию проверки СРАЗУ при загрузке страницы
+checkAuth();
 
 /* =========================
   МЕНЮ: открыть/закрыть

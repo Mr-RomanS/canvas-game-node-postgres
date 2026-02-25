@@ -120,6 +120,14 @@ app.post('/update-username', async (req, res) =>{
     }
 })
 
+app.get('/check-auth', (req,res)=>{
+    if(req.session.user){
+        res.status(200).json(req.session.user);
+    }else{
+        res.status(401).send('Unauthorizired');
+    }
+})
+
 app.post('/logout', (req, res) => {
     // Команда destroy полностью удаляет сессию из "блокнота" сервера
     req.session.destroy((err) => {
