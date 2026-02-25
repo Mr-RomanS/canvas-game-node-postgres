@@ -368,19 +368,7 @@ avatarInput.addEventListener('change', () => {
 });
 
 
-// Загружаем данные при старте страницы
-const savedLogin = localStorage.getItem('login');
-const savedEmail = localStorage.getItem('email');
-const savedPassword = localStorage.getItem('password');
-
-if (savedLogin) loginPlayer.textContent = savedLogin;
-if (savedEmail) emailPlayer.textContent = savedEmail;
-if (savedPassword) {
-  passwordPlayer.textContent = '*'.repeat(savedPassword.length);
-}
-
-
-//-------Сохраняем значение из ввода в Local Storage.-----
+//-------Сохраняем значение из ввода в PostgreSQL.-----
 let isAuthenticated = false;
 
 signUpForm.addEventListener('submit', async (event) =>{
@@ -497,7 +485,6 @@ signInForm.addEventListener('submit', async (event)=>{
   logInPasswordInput.value = '';
 })
 
-
 //----- сменa логина в аккаунт.
 changeNameForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -580,12 +567,29 @@ togglePassImages.forEach(img => {
 });
 
 //-------Выходим из аккаунта.--------
-logoutButton.addEventListener('click', () => {
+logoutButton.addEventListener('click', async () => {
+    try {
+        // 1. Сообщаем серверу, что мы выходим
+        const response = await fetch('/logout', { method: 'POST' });
 
-  lobbyMenu.style.display = 'block';
-  lobbyPlayerAkk.style.display = 'none';
+        if (response.ok) {
+            // 2. Если сервер подтвердил выход, сбрасываем состояние
+            isAuthenticated = false;
 
-  moveThemeCard(false);
+            // 3. Переключаем видимость (твой старый код)
+            lobbyMenu.style.display = 'block';
+            lobbyPlayerAkk.style.display = 'none';
+            moveThemeCard(false);
+
+            // Опционально: очищаем поля на экране аккаунта
+            loginPlayer.textContent = '';
+            emailPlayer.textContent = '';
+        } else {
+            alert('Ошибка сервера при попытке выйти');
+        }
+    } catch (err) {
+        console.error('Ошибка сети при выходе:', err);
+    }
 });
 
 // -----Удаление сохраненных логинов и пароля.-----
