@@ -612,21 +612,34 @@ logoutButton.addEventListener('click', async () => {
 });
 
 // -----Удаление сохраненных логинов и пароля.-----
-bthDelete.addEventListener('click', () => {
-  localStorage.removeItem('login');
-  localStorage.removeItem('email');
-  localStorage.removeItem('password');
+bthDelete.addEventListener('click', async () => {
+  if (!confirm('Вы уверены, что хотите НАВСЕГДА удалить свой аккаунт? Все данные и аватар будут стерты.')) {
+        return;
+    }
 
+    try{
+      const response = await fetch('/delete-account', {
+        method:'DELETE',
+      });
 
+      if(response.ok){
+        loginPlayer.textContent = '';
+        emailPlayer.textContent = '';
+        passwordPlayer.textContent = '';
+        avatarPlayer.src = 'images/menu_icons/circle-user-solid-full.svg';
 
-  loginPlayer.textContent = '';
-  emailPlayer.textContent = '';
-  passwordPlayer.textContent = '';
+        isAuthenticated = false;
+        lobbyMenu.style.display = 'block';
+        lobbyPlayerAkk.style.display = 'none';
+        moveThemeCard(false);
 
-  lobbyMenu.style.display = 'block'
-  lobbyPlayerAkk.style.display = 'none'
-
-  moveThemeCard(false);
+        alert('Ваш аккаунт полностью удален.');
+      }else {
+            alert('Не удалось удалить аккаунт. Попробуйте позже.');
+        }
+    }catch (err) {
+        console.error('Ошибка сети при удалении:', err);
+    }
 });
 
 

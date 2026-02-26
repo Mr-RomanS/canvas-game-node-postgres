@@ -203,8 +203,45 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         console.error('Ошибка загрузки:', err);
         // Если это ошибка Multer (например, файл большой), отправим понятный текст
         if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).send('Файл слишком большой! Максимум 2МБ.');
+            return res.status(400).send('Файл слишком большой! Максимум 5МБ.');
         }
         res.status(500).send('Ошибка сервера при загрузке аватара');
     }
+});
+
+app.delete('/delete-account', async (req, res) => {
+    if(!req.session.user){
+        return res.status(401).send('Вы не авторизованы');
+    }
+
+    const userEmail = req.session.user.email;
+
+    try{
+        const userResult = await dbClient.query('SELECT avatar_url FROM users WHERE email = $1', [userEmail]);
+        const avatarUrl = userResult.rows[0]?.avatar_url;
+
+        if(avatarUrl){
+            const relativePath = avatarUrl.startsWith('/') ? avatarUrl.slice(1) : avatarUrl;
+            const fullPath = path.join(__dirname, relativePath);
+
+            if(fs.existsSync(fullPath)){
+                fs.unlinkSync(fullPath);
+                console.log(`Файл удален: ${fullPath}`);
+            }
+        }
+        await dbClient.query('DELETE FROM users WHERE email = $1', [userEmail]);
+
+        req.session.destroy((err) =>{
+            if(err){
+                console.error('Ошибка при уничтожении сессии:', err);
+                return res.status(500).send('Ошибка при выходе из системы');
+            }
+            res.clearCookie('connect.sid');
+            res.status(200).send('Аккаунт успешно удален');
+        })
+    }catch (err) {
+        console.error('Ошибка в процессе удаления аккаунта:', err);
+        res.status(500).send('Ошибка сервера при удалении');
+    }
+
 });
