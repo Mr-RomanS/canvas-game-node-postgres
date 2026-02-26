@@ -74,33 +74,35 @@ app.post('/register', async (req, res) =>{
     }
 })
 
-app.post('/login', async (req,res)=>{
-    try{
-        const {email, password} = req.body;
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
 
-    const userResult = await dbClient.query('SELECT * FROM users WHERE email = $1', [email]);
+    try {
+        const result = await dbClient.query('SELECT * FROM users WHERE email = $1', [email]);
+        const user = result.rows[0];
 
-    if(userResult.rows.length === 0){
-        return res.status(401).send('Неверный Email или пароль');
-    }
+        if (user) {
+            // Пользователь найден, проверяем пароль
+            const isMatch = await bcrypt.compare(password, user.password_hash);
 
-    const user = userResult.rows[0];
-
-    const isMatch = await bcrypt.compare(password, user.password_hash);
-
-    if (isMatch) {
-    req.session.user = {
-        username: user.username,
-        email: user.email
-    };
-    res.status(200).json(req.session.user);
-}
-    }catch (err) {
+            if (isMatch) {
+                // ПАРОЛЬ ВЕРНЫЙ
+                req.session.user = { id: user.id, username: user.username, email: user.email, avatar_url: user.avatar_url };
+                res.json({ username: user.username, email: user.email, avatar_url: user.avatar_url });
+            } else {
+                // ПАРОЛЬ НЕВЕРНЫЙ - отправляем ошибку!
+                console.log("Неверный пароль для:", email);
+                res.status(401).send('Incorrect password'); 
+            }
+        } else {
+            // EMAIL НЕ НАЙДЕН
+            res.status(401).send('User not found');
+        }
+    } catch (err) {
         console.error(err);
-        res.status(500).send('Ошибка сервера при входе');
+        res.status(500).send('Server error');
     }
-    
-})
+});
 
 app.post('/update-username', async (req, res) =>{
     try{

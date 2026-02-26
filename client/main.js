@@ -479,49 +479,52 @@ btnShowPasswordAkk.addEventListener('click', () => {
 });
 
 //------- Форма  входа в аккаунт.----
-signInForm.addEventListener('submit', async (event)=>{
-  event.preventDefault();
+signInForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
+    const email = logInEmailInput.value;
+    const password = logInPasswordInput.value;
 
-  const email = logInEmailInput.value;
-  const password = logInPasswordInput.value;
+    // Скрываем старую ошибку перед новым запросом
+    warningInCorrectPass.style.display = 'none'; 
+    warningInCorrectPass.textContent = '';
 
-  warningInCorrectPass.textContent = '';
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
 
-  // Получаем сохранённые данные
-  try{
-    const response = await fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({email, password}),
-    })
+        if (response.ok) {
+            const userData = await response.json();
 
-    if(response.ok){
-      const userData = await response.json();
+            // Успех: заполняем профиль
+            loginPlayer.textContent = userData.username;
+            emailPlayer.textContent = userData.email;
+            passwordPlayer.textContent = '********';
 
-      // Теперь мы можем отрисовать аккаунт данными ИЗ БАЗЫ
-      loginPlayer.textContent = userData.username;
-      emailPlayer.textContent = userData.email;
-      passwordPlayer.textContent = '********'; // Пароль мы не шлем, просто ставим звездочки
+            isAuthenticated = true;
+            lobbyMenu.style.display = 'none';
+            lobbyPlayerAkk.style.display = 'block';
+            moveThemeCard(true);
 
-      // Переключаем меню
-      isAuthenticated = true;
-      lobbyMenu.style.display = 'none';
-      lobbyPlayerAkk.style.display = 'block';
-      moveThemeCard(true);
+            // ОЧИЩАЕМ ПОЛЯ ТОЛЬКО ЗДЕСЬ (при успехе)
+            logInEmailInput.value = '';
+            logInPasswordInput.value = '';
+            hideAuthForms(); // Закрываем окно входа
 
-    }else{
-      warningInCorrectPass.textContent = 'Incorrect E-Mail or Password';
-      warningInCorrectPass.style.display = 'block';
+        } else {
+            // СЕРВЕР ОТВЕТИЛ ОШИБКОЙ (401, 404 и т.д.)
+            warningInCorrectPass.textContent = 'Incorrect E-Mail or Password';
+            warningInCorrectPass.style.display = 'block';
+        }
+    } catch (err) {
+        console.error("Ошибка сети:", err);
+        warningInCorrectPass.textContent = 'Server is not responding';
+        warningInCorrectPass.style.display = 'block';
     }
-  }catch (err) {
-        console.error("Ошибка входа:", err);
-        alert("Не удалось связаться с сервером");
-    }
-
-  logInEmailInput.value = '';
-  logInPasswordInput.value = '';
-})
+});
 
 //----- сменa логина в аккаунт.
 changeNameForm.addEventListener('submit', async (event) => {
@@ -615,7 +618,9 @@ logoutButton.addEventListener('click', async () => {
             // 2. Если сервер подтвердил выход, сбрасываем состояние
             isAuthenticated = false;
 
+
             // 3. Переключаем видимость (твой старый код)
+            showSignIn();
             lobbyMenu.style.display = 'block';
             lobbyPlayerAkk.style.display = 'none';
             moveThemeCard(false);
@@ -623,6 +628,7 @@ logoutButton.addEventListener('click', async () => {
             // Опционально: очищаем поля на экране аккаунта
             loginPlayer.textContent = '';
             emailPlayer.textContent = '';
+            closeMenu();
         } else {
             alert('Ошибка сервера при попытке выйти');
         }
