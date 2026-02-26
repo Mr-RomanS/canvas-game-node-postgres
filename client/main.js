@@ -22,7 +22,11 @@ const openSignIn = document.getElementById('openSignIn');
 const btnPassIconUp = document.getElementById('btnPassIconUp');
 const btnPassIconIn = document.getElementById('btnPassIconIn');
 
+const iAgreeText = document.getElementById('iAgreeText')
 const themeGrid = document.getElementById('themeGrid');
+const rulesBtn = document.getElementById('rulesBtn');
+const modalOverlay = document.getElementById('modalOverlay');
+const closeModal = document.getElementById('closeModal');
 
 const avatarInput = document.getElementById('avatarInput');
 const avatarPlayer = document.getElementById('avatarPlayer');
@@ -59,9 +63,9 @@ const togglePassImages = document.querySelectorAll('.toggle-pass');
 
 let lastUrl = null;
 
-const savedLang = localStorage.getItem('lang');
-const savedBg = localStorage.getItem('bgColor');
 
+
+// Вызываем функцию проверки СРАЗУ при загрузке страницы
 const checkAuth = async () => {
     try {
         const response = await fetch('/check-auth');
@@ -90,7 +94,6 @@ const checkAuth = async () => {
     }
 };
 
-// Вызываем функцию проверки СРАЗУ при загрузке страницы
 checkAuth();
 
 /* =========================
@@ -176,7 +179,7 @@ function setLanguage(lang) {
   });
 }
 
-
+const savedLang = localStorage.getItem('lang');
 const initialLang = savedLang || 'en';
 setLanguage(initialLang);
 
@@ -271,6 +274,7 @@ document.addEventListener('keydown', (e) => {
   // закрыть меню
   closeMenu();
 });
+const savedBg = localStorage.getItem('bgColor');
 function setBodyBackground(color) {
   document.body.style.backgroundColor = color;
   localStorage.setItem('bgColor', color);
@@ -290,8 +294,6 @@ if (savedBg) {
   setBodyBackground(savedBg);
   markSelected(savedBg);
 }
-
-
 // 2) Клик по цвету
 if (themeGrid) {
   themeGrid.addEventListener('click', (e) => {
@@ -303,6 +305,7 @@ if (themeGrid) {
     markSelected(color);
   });
 }
+
 // Функция для переноса блока темы
 function moveThemeCard(isLoggedIn) {
     const themeCard = document.getElementById('themeCard');
@@ -357,6 +360,23 @@ function setupPasswordToggle(buttonId, wrapperId) {
 setupPasswordToggle('btnPassIconUp', 'iconPassUp');
 setupPasswordToggle('btnPassIconIn', 'iconPassIn');
 
+// ------Открытие и закрытие модального окна.
+function openModalWindow() {
+    closeMenu(); 
+    modalOverlay.style.display = 'flex';
+}
+iAgreeText.addEventListener('click', (e) => {
+        e.preventDefault();
+         openModalWindow();
+});
+closeModal.addEventListener('click', () =>{
+  modalOverlay.style.display = 'none';
+})
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+    }
+});
 
 //-------Меняем аватарку внутри аккаунта.----
 avatarInput.addEventListener('change', async () => {
@@ -491,8 +511,7 @@ signInForm.addEventListener('submit', async (event)=>{
       moveThemeCard(true);
 
     }else{
-      const errorMsg = await response.text();
-      warningInCorrectPass.textContent = errorMsg;
+      warningInCorrectPass.textContent = 'Incorrect E-Mail or Password';
       warningInCorrectPass.style.display = 'block';
     }
   }catch (err) {
@@ -548,6 +567,7 @@ changeNameForm.addEventListener('submit', async (event) => {
     }
 });
 
+//----- сменa пароля в аккаунт.
 changePasswordForm.addEventListener('submit', (event) =>{
   event.preventDefault();
 
@@ -611,7 +631,7 @@ logoutButton.addEventListener('click', async () => {
     }
 });
 
-// -----Удаление сохраненных логинов и пароля.-----
+// -----Удаление сохраненных логин и пароля.-----
 bthDelete.addEventListener('click', async () => {
   if (!confirm('Вы уверены, что хотите НАВСЕГДА удалить свой аккаунт? Все данные и аватар будут стерты.')) {
         return;

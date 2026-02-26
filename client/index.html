@@ -67,7 +67,7 @@
                 maxlength="64"
                 required
                 >
-    <p id="warningInCorrectPass">Incorrect E-Mail or Password</p>
+    <p id="warningInCorrectPass"></p>
         <div id="iconPassIn">
             <input
             id="logInPasswordInput"
@@ -142,7 +142,7 @@
         <div class="agree-row">
             <input type="checkbox" id="agree" name="agree" required>
             <label for="agree" >
-                 <span class="IAgreeText" data-i18n="SpanLabelAgree1">I agree to the Privacy Policy</span> <br>
+                 <span class="IAgreeText" id="iAgreeText" data-i18n="SpanLabelAgree1">I agree to the Privacy Policy</span> <br>
                 <span class="IAgreeText" data-i18n="SpanLabelAgree2">and Terms of Service</span>
             </label>
         </div>
@@ -244,8 +244,39 @@
 </ul>
     </nav>
 
+<section  id="modalOverlay"  >
+    <div class="modal-content">
+        <button id="closeModal" class="btn-close-modal"></button>
+        <h2 id="modalTitle" data-i18n="rules_title_0"></h2>
+        <div id="modalBody">
+            <h3 data-i18n="rules_title_1"></h3>
+            <p data-i18n="rules_text_0"></p>
+            <p data-i18n="rules_text_1"></p>
+            <p data-i18n="rules_text_2"></p>
+            <hr>
+            <h3 data-i18n="rules_title_2"></h3>
+            <p data-i18n="rules_text_3"></p>
+            <p data-i18n="rules_text_4"></p>
+            <p data-i18n="rules_text_5"></p>
+            <hr>
+            <h3 data-i18n="rules_title_3"></h3>
+            <p data-i18n="rules_text_6"></p>
+            <p data-i18n="rules_text_7"></p>
+            <hr>
+            <h3 data-i18n="rules_title_4"></h3>
+            <p data-i18n="rules_text_8"></p>
+            <p data-i18n="rules_text_9"></p>
+            <p data-i18n="rules_text_10"></p>
+            <h3 data-i18n="rules_title_5"></h3>
+            <p data-i18n="rules_text_11"></p>
+        </div>
+        <div id="modalFooter">
+            <button id="modalOkBtn" >OK</button>
+        </div>
+    </div>
+    </section>
 
-    <section id="lobbyScreen">
+<section id="lobbyScreen">
         <video autoplay muted loop playsinline poster="images/poster.png" class="back-video">
     <source src="Hero_Background_Video.mp4!" type="video/mp4">
     Ваш браузер не поддерживает теги видео.
@@ -253,7 +284,7 @@
         <button id="btn_playNow" ><span data-i18n="ButtonPlay">Play Now</span><img src="images/menu_icons/play-solid-full.svg" alt="Play Icon"></button>
     </section>
 
-   <section id="gameScreen">
+<section id="gameScreen">
         <p>X</p>
     <div id="zehlerX">0</div>
     <p>Y</p>
