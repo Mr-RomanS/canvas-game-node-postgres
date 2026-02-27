@@ -201,13 +201,6 @@ header {
   visibility: hidden;
   pointer-events: none;
 }
-#sideMenu::-webkit-scrollbar {
-  width: 6px;
-}
-#sideMenu::-webkit-scrollbar-thumb {
-  background: var(--color-green);
-  border-radius: 10px;
-}
 
 #sideMenu.active {
   transform: translateX(0);
@@ -242,6 +235,11 @@ header {
 
 #lobbyMenu {
   display: block;
+  background-color: var(--color-bg-menu);
+  border: 2px solid var(--color-accent-hover);
+  margin-top: 20px;
+  border-radius: var(--radius-md);
+  padding: 10px;
 }
 
 #sideMenu ul {
@@ -737,6 +735,7 @@ header {
   position: relative;
   border: 2px solid var(--color-accent-hover);
   border-radius: var(--radius-md);
+  background-color: var(--color-bg-menu);
 }
 
 #lobbyPlayerAkk hr {

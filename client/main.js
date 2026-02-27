@@ -268,11 +268,14 @@ document.addEventListener('keydown', (e) => {
   // закрыть меню
   closeMenu();
 });
+
 const savedBg = localStorage.getItem('bgColor');
 function setBodyBackground(color) {
   document.body.style.backgroundColor = color;
+  sideMenu.style.backgroundColor = color;
   localStorage.setItem('bgColor', color);
 }
+
 function markSelected(color) {
   const buttons = document.querySelectorAll('.themeColor');
   buttons.forEach(btn => {
@@ -299,29 +302,29 @@ if (themeGrid) {
     markSelected(color);
   });
 }
+// // Функция для переноса блока темы
 
-// Функция для переноса блока темы
-function moveThemeCard(isLoggedIn) {
-    const themeCard = document.getElementById('themeCard');
-    const lobbyMenu = document.getElementById('lobbyMenu');
-    const lobbyPlayerAkk = document.getElementById('lobbyPlayerAkk');
+// function moveThemeCard(isLoggedIn) {
+//     const themeCard = document.getElementById('themeCard');
+//     const lobbyMenu = document.getElementById('lobbyMenu');
+//     const lobbyPlayerAkk = document.getElementById('lobbyPlayerAkk');
     
-    // Элемент, ПЕРЕД которым мы хотим вставить блок в аккаунте
-    const logoutBtn = document.getElementById('logoutButton');
+//     // Элемент, ПЕРЕД которым мы хотим вставить блок в аккаунте
+//     const logoutBtn = document.getElementById('logoutButton');
     
-    // Элемент, ПЕРЕД которым мы хотим вернуть блок в обычном меню (например, перед правилами)
-    const rulesBlock = document.getElementById('rules');
+//     // Элемент, ПЕРЕД которым мы хотим вернуть блок в обычном меню (например, перед правилами)
+//     const rulesBlock = document.getElementById('rules');
 
-    if (isLoggedIn) {
-        if (lobbyPlayerAkk && logoutBtn) {
-            lobbyPlayerAkk.insertBefore(themeCard, logoutBtn.parentNode); 
-        }
-    } else {
-        if (lobbyMenu && rulesBlock) {
-            lobbyMenu.insertBefore(themeCard, rulesBlock);
-        }
-    }
-}
+//     if (isLoggedIn) {
+//         if (lobbyPlayerAkk && logoutBtn) {
+//             lobbyPlayerAkk.insertBefore(themeCard, logoutBtn.parentNode); 
+//         }
+//     } else {
+//         if (lobbyMenu && rulesBlock) {
+//             lobbyMenu.insertBefore(themeCard, rulesBlock);
+//         }
+//     }
+// }
 
 // -------отображения пароля в виде текст,смена картинки.
 function setupPasswordToggle(buttonId, wrapperId) {
