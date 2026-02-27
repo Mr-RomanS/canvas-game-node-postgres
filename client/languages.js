@@ -21,12 +21,10 @@ export const translations = {
     PassPlayerAkk:'Password:',
     changeNameLabel:'Change your Login',
     changeBtnLogin:'Change',
-
     pass_success: 'Password changed successfully',
     pass_err_old: 'Old password is incorrect',
     pass_err_fail: 'Update failed. Try again',
     pass_err_server: 'Server connection error',
-
     OldPasswordLabel:'Old Password',
     NewPasswordLabel1:'New Password',
     NewPasswordLabel2: '(8-20 alphanumeric characters)',
@@ -35,14 +33,12 @@ export const translations = {
     DeleteP:'Delete Account?',
     DeleteBtn:'Delete',
     ButtonPlay:'Play Now',
-
     rules_title_0: 'Rules',
     rules_title_1: '1.General Provisions',
     rules_title_2: '2.Intellectual Property',
     rules_title_3: '3.Disclaimer',
     rules_title_4: '4.Privacy and Data',
     rules_title_5: '5.User Conduct',
-
     rules_text_0: '- By using this website, starting the game, or registering an account, you automatically agree to these Rules and Terms of Service in full.',
     rules_text_1: '- The game “Labyrinth” is a free non-commercial project created for informational and entertainment purposes.',
     rules_text_2: '- By registering in the game, the user confirms that they have read these rules and accept them in full.',
@@ -55,6 +51,12 @@ export const translations = {
     rules_text_9: '- We commit not to share your contact information with third parties.',
     rules_text_10: '- The user has the right to permanently delete their account at any time, which will result in the immediate removal of all their data and files from the server.',
     rules_text_11: '- Any attempts to hack the game, bypass the authorization system, or exploit server vulnerabilities are prohibited!',
+
+    confirm_delete: 'Are you sure you want to delete your account?',
+    delete_success: 'Your account has been completely deleted.',
+    delete_error: 'Failed to delete the account. Please try again later.',
+    modalAgreeBtn: 'I Agree',
+    modalDeleteBtn: 'I Am Sure',
   },
 
   ua: {
@@ -91,14 +93,12 @@ export const translations = {
     DeleteP:'Видалити обліковий запис?',
     DeleteBtn:'Видалити',
     ButtonPlay:'Грати зараз',
-
     rules_title_0: 'Правила',
     rules_title_1: '1.Загальні положення',
     rules_title_2: '2.Інтелектуальна власність',
     rules_title_3: '3.Відмова від відповідальності (Disclaimer)',
     rules_title_4: '4.Конфіденційність та дані',
     rules_title_5: '5.Поведінка користувача',
-
     rules_text_0: '- Використовуючи цей вебсайт, запускаючи гру або реєструючи обліковий запис, ви автоматично погоджуєтеся з цими Правилами та Умовами обслуговування в повному обсязі.',
     rules_text_1: '- Гра «Labyrinth» є безкоштовним некомерційним проєктом, створеним з ознайомчою та розважальною метою.',
     rules_text_2: '- Реєструючись у грі, користувач підтверджує, що ознайомлений з цими правилами та приймає їх у повному обсязі.',
@@ -111,6 +111,12 @@ export const translations = {
     rules_text_9: '- Ми зобов’язуємось не передавати ваші контактні дані третім особам.',
     rules_text_10: '- Користувач має право в будь-який момент повністю видалити свій обліковий запис, що призведе до негайного видалення всіх його даних та файлів із сервера.',
     rules_text_11: '- Заборонені будь-які спроби зламати гру, обійти систему авторизації або використати вразливості сервера!',
+
+    confirm_delete: 'Ви впевнені, що хочете видалити свій обліковий запис?',
+    delete_success: 'Ваш обліковий запис повністю видалено.',
+    delete_error: 'Не вдалося видалити обліковий запис. Спробуйте пізніше.',
+    modalAgreeBtn: 'Я погоджуюся',
+    modalDeleteBtn: 'Я впевнений / Я впевнена',
   },
 
   de: {
@@ -147,14 +153,12 @@ export const translations = {
     DeleteP:'Konto löschen?',
     DeleteBtn:'Löschen',
     ButtonPlay:'Jetzt spielen',
-    
     rules_title_0: 'Regeln',
     rules_title_1: '1.Allgemeine Bestimmungen',
     rules_title_2: '2.Geistiges Eigentum',
     rules_title_3: '3.Haftungsausschluss (Disclaimer)',
     rules_title_4: '4.Datenschutz und Daten',
     rules_title_5: '5.Nutzerverhalten',
-
     rules_text_0: '- Durch die Nutzung dieser Website, das Starten des Spiels oder die Registrierung eines Kontos stimmen Sie diesen Regeln und den Nutzungsbedingungen in vollem Umfang zu.',
     rules_text_1: '- Das Spiel „Labyrinth“ ist ein kostenloses, nicht kommerzielles Projekt, das zu Informations- und Unterhaltungszwecken erstellt wurde.',
     rules_text_2: '- Mit der Registrierung im Spiel bestätigt der Nutzer, dass er diese Regeln gelesen hat und sie in vollem Umfang akzeptiert.',
@@ -167,5 +171,11 @@ export const translations = {
     rules_text_9: '- Wir verpflichten uns, Ihre Kontaktdaten nicht an Dritte weiterzugeben.',
     rules_text_10: '- Der Nutzer hat das Recht, sein Konto jederzeit vollständig zu löschen, was die sofortige Entfernung aller seiner Daten und Dateien vom Server zur Folge hat.',
     rules_text_11: '- Jegliche Versuche, das Spiel zu hacken, das Autorisierungssystem zu umgehen oder Server-Schwachstellen auszunutzen, sind verboten!',
+
+    confirm_delete: 'Sind Sie sicher, dass Sie Ihr Konto löschen möchten?',
+    delete_success: 'Ihr Konto wurde vollständig gelöscht.',
+    delete_error: 'Das Konto konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut.',
+    modalAgreeBtn: 'Ich stimme zu',
+    modalDeleteBtn: 'Ich bin sicher',
   }
 }

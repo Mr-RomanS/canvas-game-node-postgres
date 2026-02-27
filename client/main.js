@@ -92,6 +92,11 @@ const checkAuth = async () => {
 
 checkAuth();
 
+// Глобальная функция перевода
+const getTranslation = (key) => {
+    const currentLang = localStorage.getItem('lang') || 'en';
+    return translations[currentLang][key] || key;
+};
 /* =========================
   МЕНЮ: открыть/закрыть
    ========================= */
@@ -570,8 +575,6 @@ changePasswordForm.addEventListener('submit', async(event) =>{
       })
     });
 
-    const getTranslation = (key) => translations[currentLang][key] || key;
-
     if(response.ok){
       passwordMessage.textContent = getTranslation('pass_success');
       passwordMessage.style.color = 'green';
@@ -638,9 +641,11 @@ logoutButton.addEventListener('click', async () => {
 
 
 // -----Предупреждение о Удаление сохраненных логин и пароля.-----
+
+
 bthDelete.addEventListener('click', (e) =>{
   if(e){
-    modalBody.textContent = 'Are You sure you want to Delete your account?';
+    modalBody.textContent = getTranslation('confirm_delete');
     modalDeleteBtn.style.display = 'block';
     modalOkBtn.style.display = 'none';
     modalTitle.textContent = '';
@@ -667,18 +672,19 @@ modalDeleteBtn.addEventListener('click', async (e) => {
         lobbyMenu.style.display = 'block';
         lobbyPlayerAkk.style.display = 'none';
 
-          modalBody.textContent = 'Ваш аккаунт полностью удален.';
-          modalDeleteBtn.style.display = 'none';
-          modalOkBtn.style.display = 'none';
-          modalTitle.textContent = '';
+        modalBody.textContent = getTranslation('delete_success');
+        modalDeleteBtn.style.display = 'none';
+        modalOkBtn.style.display = 'none';
+        modalTitle.textContent = '';
       }else {
-            modalBody.textContent = 'Не удалось удалить аккаунт. Попробуйте позже.';
-          modalDeleteBtn.style.display = 'none';
-          modalOkBtn.style.display = 'none';
-          modalTitle.textContent = '';
+        modalBody.textContent = getTranslation('delete_error');
+        modalDeleteBtn.style.display = 'none';
+        modalOkBtn.style.display = 'none';
+        modalTitle.textContent = '';
         }
     }catch (err) {
         console.error('Network error during deletion:', err);
+        modalBody.textContent = getTranslation('pass_err_server');
     }
 });
 
