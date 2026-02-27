@@ -15,6 +15,7 @@ const langRoot = document.getElementById('language_list');
 const signUp = document.getElementById('sign_up');
 const signIn = document.getElementById('sign_in');
 const signUpSuccessfullText = document.getElementById('SignUpSuccessfullText')
+const warningTextBlockSignUp = document.getElementById('warningTextBlockSignUp');
 
 const openSignUp = document.getElementById('openSignUp');
 const openSignIn = document.getElementById('openSignIn');
@@ -449,14 +450,16 @@ signUpForm.addEventListener('submit', async (event) =>{
 
       showSignIn();
       signUpSuccessfullText.style.display = 'block';
+      signUpSuccessfullText.textContent = getTranslation('successfullReg')
       warningInCorrectPass.style.display = 'none';
     }else{
-      const errorText = await response.text();
-      alert("Ошибка: " + errorText);
+      warningTextBlockSignUp.textContent  = getTranslation('FailedToWrite');
+      warningTextBlockSignUp.style.color = 'red';
     }
   }catch(err){
-        console.error("Ошибка сети:", err);
-        alert("Не удалось связаться с сервером");
+        console.error("Network error:", err);
+        openModalWindow();
+        modalBody.textContent = getTranslation('FailedConnectServer');
   }
 
 })

@@ -64,6 +64,9 @@ export const translations = {
     LoginCannotBeEmpty:'Login cannot be empty',
     IncorrectEMailorPass:'Incorrect E-Mail or Password',
     ServerNotResponding:'Server is not responding',
+    successfullReg:'You have successfull registered!  Log in your account',
+    FailedToWrite:'Error: Failed to write to the database',
+    FailedConnectServer:'Failed to connect to the server',
     
   },
 
@@ -132,7 +135,10 @@ export const translations = {
     LoginCannotBeEmpty:'Логін не може бути порожнім',
     IncorrectEMailorPass:'Неправильний E-Mail або пароль',
     ServerNotResponding:'Сервер не відповідає',
-
+    successfullReg:'Ви успішно зареєстровані! Увійдіть у свій обліковий запис',
+    FailedToWrite:'Помилка: Не вдалося записати в базу даних',
+    FailedConnectServer:'Не вдалося підключитися до сервера',
+    
   },
 
   de: {
@@ -200,6 +206,9 @@ export const translations = {
     LoginCannotBeEmpty:'Der Login darf nicht leer sein',
     IncorrectEMailorPass:'Ungültige E-Mail oder Passwort',
     ServerNotResponding:'Der Server antwortet nicht',
+    successfullReg:'Sie haben sich erfolgreich registriert! Melden Sie sich in Ihrem Konto an',
+    FailedToWrite:'Fehler: Fehler beim Schreiben in die Datenbank',
+    FailedConnectServer:'Verbindung zum Server fehlgeschlagen',
 
   }
 }
