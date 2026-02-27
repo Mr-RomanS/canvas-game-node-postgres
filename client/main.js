@@ -578,6 +578,8 @@ changePasswordForm.addEventListener('submit', async(event) =>{
   const newPass = newPassPlayer.value;
   const currentEmail = emailPlayer.textContent;
 
+  const currentLang = localStorage.getItem('lang') || 'en';
+
   passwordMessage.textContent = '';
 
   try{
@@ -591,24 +593,25 @@ changePasswordForm.addEventListener('submit', async(event) =>{
       })
     });
 
-    if(response.ok){
-      passwordMessage.textContent = 'Password changet successufully';
-      passwordMessage.style.color = 'green';
+    const getTranslation = (key) => translations[currentLang][key] || key;
 
+    if(response.ok){
+      passwordMessage.textContent = getTranslation('pass_success');
+      passwordMessage.style.color = 'green';
       oldPassPlayer.value = '';
       newPassPlayer.value = '';
     }else if (response.status === 401) {
       // Прямое указание текста при неверном пароле
-      passwordMessage.textContent = 'Old password is incorrect';
+      passwordMessage.textContent = getTranslation('pass_err_old');
       passwordMessage.style.color = '#8B1E1E';
     } else {
       // Для всех остальных ошибок (500 и т.д.)
-      passwordMessage.textContent = 'Update failed. Try again';
+      passwordMessage.textContent = getTranslation('pass_err_fail');
       passwordMessage.style.color = '#8B1E1E';
     }
   }catch(err){
-    console.error('Ошибка смены пароля:', err);
-    passwordMessage.textContent = 'Server connection error';
+    const currentLang = localStorage.getItem('lang') || 'en';
+    passwordMessage.textContent = translations[currentLang]['pass_err_server'];
     passwordMessage.style.color = '#8B1E1E';
   }
 })
