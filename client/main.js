@@ -24,6 +24,7 @@ const themeGrid = document.getElementById('themeGrid');
 const rulesBtn = document.getElementById('rulesBtn');
 const modalOverlay = document.getElementById('modalOverlay');
 const closeModal = document.getElementById('closeModal');
+const modalOkBtn = document.getElementById('modalOkBtn');
 
 const avatarInput = document.getElementById('avatarInput');
 const avatarPlayer = document.getElementById('avatarPlayer');
@@ -55,6 +56,10 @@ const oldPassPlayer = document.getElementById('oldPassPlayer');
 const newPassPlayer = document.getElementById('newPassPlayer');
 const passwordMessage = document.getElementById('passwordMessage');
 const togglePassImages = document.querySelectorAll('.toggle-pass');
+
+const modalBody = document.getElementById('modalBody');
+const modalDeleteBtn = document.getElementById('modalDeleteBtn');
+const modalTitle = document.getElementById('modalTitle');
 
 let lastUrl = null;
 
@@ -365,6 +370,7 @@ function openModalWindow() {
     closeMenu(); 
     modalOverlay.style.display = 'flex';
 }
+
 iAgreeText.addEventListener('click', (e) => {
         e.preventDefault();
          openModalWindow();
@@ -376,6 +382,8 @@ modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) {
         modalOverlay.style.display = 'none';
     }
+    modalDeleteBtn.style.display = 'none';
+    modalOkBtn.style.display = 'block';
 });
 
 //-------Меняем аватарку внутри аккаунта.----
@@ -468,6 +476,10 @@ signInForm.addEventListener('submit', async (event) => {
             body: JSON.stringify({ email, password }),
         });
 
+        // ОЧИЩАЕМ ПОЛЯ ТОЛЬКО ЗДЕСЬ (при успехе)
+            logInEmailInput.value = '';
+            logInPasswordInput.value = '';
+
         if (response.ok) {
             const userData = await response.json();
 
@@ -480,9 +492,6 @@ signInForm.addEventListener('submit', async (event) => {
             lobbyPlayerAkk.style.display = 'block';
             moveThemeCard(true);
 
-            // ОЧИЩАЕМ ПОЛЯ ТОЛЬКО ЗДЕСЬ (при успехе)
-            logInEmailInput.value = '';
-            logInPasswordInput.value = '';
             hideAuthForms(); // Закрываем окно входа
 
         } else {
@@ -620,6 +629,7 @@ logoutButton.addEventListener('click', async () => {
             // Опционально: очищаем поля на экране аккаунта
             loginPlayer.textContent = '';
             emailPlayer.textContent = '';
+            warningInCorrectPass.textContent = 'Server is not responding';
             closeMenu();
         } else {
             alert('Ошибка сервера при попытке выйти');
@@ -630,10 +640,20 @@ logoutButton.addEventListener('click', async () => {
 });
 
 // -----Удаление сохраненных логин и пароля.-----
-bthDelete.addEventListener('click', async () => {
-  if (!confirm('Вы уверены, что хотите НАВСЕГДА удалить свой аккаунт? Все данные и аватар будут стерты.')) {
-        return;
-    }
+
+bthDelete.addEventListener('click', (e) =>{
+  if(e){
+    modalBody.textContent = 'Are You sure you want to Delete your account?';
+    modalDeleteBtn.style.display = 'block';
+    modalOkBtn.style.display = 'none';
+    modalTitle.textContent = '';
+    openModalWindow();
+    closeMenu();
+  }
+    
+})
+
+modalDeleteBtn.addEventListener('click', async () => {
 
     try{
       const response = await fetch('/delete-account', {

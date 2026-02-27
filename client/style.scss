@@ -611,9 +611,20 @@ header{
     padding-top: 10px;
 }
 #modalOkBtn{
+    display: block;
     @include buttonSign;
 }
-#modalOkBtn:active{
+#modalDeleteBtn{
+    display: none;
+    
+}
+#modalDeleteBtn{
+    @include buttonSign;
+    color: white !important;
+    background-color: var( --danger) !important;
+}
+#modalOkBtn:active,
+#modalDeleteBtn:active{
     @include btnAktiv;
 }
 
