@@ -520,7 +520,7 @@ changeNameForm.addEventListener('submit', async (event) => {
     newLoginMessage.textContent = '';
 
     if(newLogin === ''){
-      newLoginMessage.textContent = 'Login cannot be empty';
+      newLoginMessage.textContent = getTranslation('LoginCannotBeEmpty');
       newLoginMessage.style.color = 'red';
       return;
     }
@@ -536,7 +536,7 @@ changeNameForm.addEventListener('submit', async (event) => {
       });
 
       if(response.ok){
-        newLoginMessage.textContent = 'Successfully update in database';
+        newLoginMessage.textContent = getTranslation('SuccessfullyUpdateInDb');
         newLoginMessage.style.color = 'green';
 
         loginPlayer.textContent = newLogin;
@@ -544,12 +544,13 @@ changeNameForm.addEventListener('submit', async (event) => {
         loginPlayers.value = '';
       }else{
         const errorText = await response.text();
-        newLoginMessage.textContent = 'Error: ' + errorText;
+        console.log(errorText)
+        newLoginMessage.textContent = 'Error!';
         newLoginMessage.style.color = 'red';
       }
     }catch(err){
-      console.error('Ошибка при смене имени:', err);
-      newLoginMessage.textContent = 'Server connection error';
+      console.error('Error while changing name:', err);
+      newLoginMessage.textContent = getTranslation('ServerConnectionError');
       newLoginMessage.style.color = 'red';
     }
 });

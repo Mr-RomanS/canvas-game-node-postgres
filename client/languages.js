@@ -59,6 +59,10 @@ export const translations = {
 
     respondingMessage:'Server is not responding',
     ServerErrorToLogOut:'Server error while attempting to log out',
+    SuccessfullyUpdateInDb:'Successfully update in database',
+    ServerConnectionError:'Server connection error',
+    LoginCannotBeEmpty:'Login cannot be empty',
+    
   },
 
   ua: {
@@ -121,7 +125,10 @@ export const translations = {
 
     respondingMessage:'Сервер не відповідає',
     ServerErrorToLogOut:'Помилка сервера під час спроби вийти',
-
+    SuccessfullyUpdateInDb:'Успішне оновлення в базі даних',
+    ServerConnectionError:'Помилка підключення до сервера',
+    LoginCannotBeEmpty:'Логін не може бути порожнім',
+    
   },
 
   de: {
@@ -184,5 +191,9 @@ export const translations = {
 
     respondingMessage:'Der Server antwortet nicht',
     ServerErrorToLogOut:'Serverfehler beim Versuch, sich abzumelden',
+    SuccessfullyUpdateInDb:'Erfolgreiche Aktualisierung in der Datenbank',
+    ServerConnectionError:'Serververbindungsfehler',
+    LoginCannotBeEmpty:'Der Login darf nicht leer sein',
+
   }
 }
