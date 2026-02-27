@@ -311,29 +311,6 @@ if (themeGrid) {
     markSelected(color);
   });
 }
-// // Функция для переноса блока темы
-
-// function moveThemeCard(isLoggedIn) {
-//     const themeCard = document.getElementById('themeCard');
-//     const lobbyMenu = document.getElementById('lobbyMenu');
-//     const lobbyPlayerAkk = document.getElementById('lobbyPlayerAkk');
-    
-//     // Элемент, ПЕРЕД которым мы хотим вставить блок в аккаунте
-//     const logoutBtn = document.getElementById('logoutButton');
-    
-//     // Элемент, ПЕРЕД которым мы хотим вернуть блок в обычном меню (например, перед правилами)
-//     const rulesBlock = document.getElementById('rules');
-
-//     if (isLoggedIn) {
-//         if (lobbyPlayerAkk && logoutBtn) {
-//             lobbyPlayerAkk.insertBefore(themeCard, logoutBtn.parentNode); 
-//         }
-//     } else {
-//         if (lobbyMenu && rulesBlock) {
-//             lobbyMenu.insertBefore(themeCard, rulesBlock);
-//         }
-//     }
-// }
 
 // -------отображения пароля в виде текст,смена картинки.
 function setupPasswordToggle(buttonId, wrapperId) {
@@ -391,7 +368,6 @@ modalOverlay.addEventListener('click', (e) => {
     }
 });
 
-
 //-------Меняем аватарку внутри аккаунта.----
 avatarInput.addEventListener('change', async () => {
   const file = avatarInput.files && avatarInput.files[0];
@@ -422,8 +398,6 @@ avatarInput.addEventListener('change', async () => {
         console.error('Network error:', err);
     }
 });
-
-
 //-------Сохраняем значение из ввода в PostgreSQL.-----
 let isAuthenticated = false;
 

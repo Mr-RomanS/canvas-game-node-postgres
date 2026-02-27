@@ -226,9 +226,12 @@ app.post('/logout', (req, res) => {
         res.status(200).send('Выход выполнен успешно');
     });
 });
+
+
 app.delete('/delete-account', async (req, res) => {
+    // Если сессии нет, возвращаем 401 и поясняем причину
     if(!req.session.user){
-        return res.status(401).send('Вы не авторизованы');
+        return res.status(401).json({ error: 'Unauthorized: No active session found' });
     }
 
     const userEmail = req.session.user.email;
@@ -243,26 +246,38 @@ app.delete('/delete-account', async (req, res) => {
 
             if(fs.existsSync(fullPath)){
                 fs.unlinkSync(fullPath);
-                console.log(`Файл удален: ${fullPath}`);
+                // Это сообщение ты увидишь в ТЕРМИНАЛЕ (на сервере)
+                console.log(`File deleted: ${fullPath}`);
             }
         }
+        
+        // Удаляем запись из БД
         await dbClient.query('DELETE FROM users WHERE email = $1', [userEmail]);
 
+        // Уничтожаем сессию
         req.session.destroy((err) =>{
             if(err){
-                console.error('Ошибка при уничтожении сессии:', err);
-                return res.status(500).send('Ошибка при выходе из системы');
+                console.error('Error while destroying the session:', err);
+                // Это ты увидишь в БРАУЗЕРЕ (Network tab), если сессия не удалится
+                return res.status(500).json({ error: 'Session destruction failed', details: err.message });
             }
             res.clearCookie('connect.sid');
-            res.status(200).send('Аккаунт успешно удален');
+            // Успешный финал: понятно и лаконично
+            res.status(200).json({ 
+                success: true, 
+                message: 'Account and associated files deleted successfully' 
+            });
         })
-    }catch (err) {
-        console.error('Ошибка в процессе удаления аккаунта:', err);
-        res.status(500).send('Ошибка сервера при удалении');
+    } catch (err) {
+        console.error('Error during the account deletion process:', err);
+        // Если база данных "упадет" или случится другая системная ошибка
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server internal error during deletion',
+            trace: err.message 
+        });
     }
-
 });
-
 
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
