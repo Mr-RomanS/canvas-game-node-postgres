@@ -19,9 +19,6 @@ const signUpSuccessfullText = document.getElementById('SignUpSuccessfullText')
 const openSignUp = document.getElementById('openSignUp');
 const openSignIn = document.getElementById('openSignIn');
 
-const btnPassIconUp = document.getElementById('btnPassIconUp');
-const btnPassIconIn = document.getElementById('btnPassIconIn');
-
 const iAgreeText = document.getElementById('iAgreeText')
 const themeGrid = document.getElementById('themeGrid');
 const rulesBtn = document.getElementById('rulesBtn');
@@ -30,7 +27,6 @@ const closeModal = document.getElementById('closeModal');
 
 const avatarInput = document.getElementById('avatarInput');
 const avatarPlayer = document.getElementById('avatarPlayer');
-const btnShowPasswordAkk = document.getElementById('btnShowPasswordAkk');
 
 //-----Форма для регистрации аккаунтов.
 const signUpForm = document.getElementById('signUpForm');
@@ -41,7 +37,6 @@ const passwordInputSignUpForm = document.getElementById('passwordInputSignUpForm
 const loginPlayer = document.getElementById('loginPlayer');
 const emailPlayer = document.getElementById('emailPlayer');
 const warningInCorrectPass = document.getElementById('warningInCorrectPass');
-const passwordPlayer = document.getElementById('passwordPlayer');
 
 const logoutButton = document.getElementById('logoutButton');
 const bthDelete = document.getElementById('bthDelete');
@@ -75,7 +70,6 @@ const checkAuth = async () => {
 
             loginPlayer.textContent = userData.username;
             emailPlayer.textContent = userData.email;
-            passwordPlayer.textContent = '********';
 
             if (userData.avatarUrl) {
                 avatarPlayer.src = userData.avatarUrl;
@@ -268,7 +262,7 @@ document.addEventListener('keydown', (e) => {
   // закрыть формы входа/регистрации
   hideAuthForms();
 
-  // закрыть попап языка
+  // закрыть popUp языка
   closeLang();
 
   // закрыть меню
@@ -329,6 +323,7 @@ function moveThemeCard(isLoggedIn) {
     }
 }
 
+// -------отображения пароля в виде текст,смена картинки.
 function setupPasswordToggle(buttonId, wrapperId) {
   const btn = document.getElementById(buttonId);
   if (!btn) return;
@@ -356,11 +351,13 @@ function setupPasswordToggle(buttonId, wrapperId) {
     input.focus();
   });
 }
-// Подключаем к двум формам
 setupPasswordToggle('btnPassIconUp', 'iconPassUp');
 setupPasswordToggle('btnPassIconIn', 'iconPassIn');
 
+
+
 // ------Открытие и закрытие модального окна.
+
 function openModalWindow() {
     closeMenu(); 
     modalOverlay.style.display = 'flex';
@@ -430,7 +427,6 @@ signUpForm.addEventListener('submit', async (event) =>{
   
       loginPlayer.textContent = username;
       emailPlayer.textContent = email;
-      passwordPlayer.textContent = '*'.repeat(password.length);
 
       loginInputSignUpForm.value = '';
       emailInputSignUpForm.value = '';
@@ -450,33 +446,6 @@ signUpForm.addEventListener('submit', async (event) =>{
 
 })
 
-
-//--------Отображение пароля внутри аккаунта.---
-let isPasswordVisible = false;
-
-btnShowPasswordAkk.addEventListener('click', () => {
-
-  const savedPassword = localStorage.getItem('password');
-  if (!savedPassword) return;
-
-  const icon = btnShowPasswordAkk.querySelector('img');
-
-  // Меняем состояние
-  isPasswordVisible = !isPasswordVisible;
-
-  if (isPasswordVisible) {
-    passwordPlayer.textContent = savedPassword;
-    if (icon) {
-      icon.src = 'images/menu_icons/eye-solid-full.svg';
-    }
-  } else {
-    passwordPlayer.textContent = '*'.repeat(savedPassword.length);
-    if (icon) {
-      icon.src = 'images/menu_icons/eye-slash-solid-full.svg';
-    }
-  }
-
-});
 
 //------- Форма  входа в аккаунт.----
 signInForm.addEventListener('submit', async (event) => {
@@ -502,7 +471,6 @@ signInForm.addEventListener('submit', async (event) => {
             // Успех: заполняем профиль
             loginPlayer.textContent = userData.username;
             emailPlayer.textContent = userData.email;
-            passwordPlayer.textContent = '********';
 
             isAuthenticated = true;
             lobbyMenu.style.display = 'none';
@@ -672,7 +640,6 @@ bthDelete.addEventListener('click', async () => {
       if(response.ok){
         loginPlayer.textContent = '';
         emailPlayer.textContent = '';
-        passwordPlayer.textContent = '';
         avatarPlayer.src = 'images/menu_icons/circle-user-solid-full.svg';
 
         isAuthenticated = false;

@@ -23,7 +23,6 @@ app.use(express.json());
 
 const session = require('express-session');
 
-
 app.use(session({
     secret: process.env.SESSION_PASSWORD, // любая длинная строка
     resave: false,
@@ -43,12 +42,6 @@ app.get('/check-auth', (req, res) => {
     }
 });
 
-// 6. Запускаем "прослушку" порта
-app.listen(PORT, () => {
-    console.log(`Сервер ожил! Слушаю на http://localhost:${PORT}`);
-});
-
-
 const dbClient = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -56,9 +49,17 @@ const dbClient = new Client({
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT
 });
+
 dbClient.connect()
-    .then(() => console.log('Связь с базой данных установлена!'))
-    .catch(err => console.error('Ошибка подключения к базе:', err));
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Сервер ожил! Слушаю на http://localhost:${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('КРИТИЧЕСКАЯ ОШИБКА ПОДКЛЮЧЕНИЯ К БАЗЕ:', err);
+        process.exit(1); // Остановить сервер, если базы нет
+    });
 
 app.post('/register', async (req, res) =>{
     try{
