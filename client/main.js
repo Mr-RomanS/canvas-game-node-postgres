@@ -500,12 +500,12 @@ signInForm.addEventListener('submit', async (event) => {
 
         } else {
             // СЕРВЕР ОТВЕТИЛ ОШИБКОЙ (401, 404 и т.д.)
-            warningInCorrectPass.textContent = 'Incorrect E-Mail or Password';
+            warningInCorrectPass.textContent = getTranslation('IncorrectEMailorPass');
             warningInCorrectPass.style.display = 'block';
         }
     } catch (err) {
-        console.error("Ошибка сети:", err);
-        warningInCorrectPass.textContent = 'Server is not responding';
+        console.error("Network error:", err);
+        warningInCorrectPass.textContent = getTranslation('ServerNotResponding');
         warningInCorrectPass.style.display = 'block';
     }
 });

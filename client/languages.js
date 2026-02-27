@@ -62,6 +62,8 @@ export const translations = {
     SuccessfullyUpdateInDb:'Successfully update in database',
     ServerConnectionError:'Server connection error',
     LoginCannotBeEmpty:'Login cannot be empty',
+    IncorrectEMailorPass:'Incorrect E-Mail or Password',
+    ServerNotResponding:'Server is not responding',
     
   },
 
@@ -128,7 +130,9 @@ export const translations = {
     SuccessfullyUpdateInDb:'Успішне оновлення в базі даних',
     ServerConnectionError:'Помилка підключення до сервера',
     LoginCannotBeEmpty:'Логін не може бути порожнім',
-    
+    IncorrectEMailorPass:'Неправильний E-Mail або пароль',
+    ServerNotResponding:'Сервер не відповідає',
+
   },
 
   de: {
@@ -194,6 +198,8 @@ export const translations = {
     SuccessfullyUpdateInDb:'Erfolgreiche Aktualisierung in der Datenbank',
     ServerConnectionError:'Serververbindungsfehler',
     LoginCannotBeEmpty:'Der Login darf nicht leer sein',
+    IncorrectEMailorPass:'Ungültige E-Mail oder Passwort',
+    ServerNotResponding:'Der Server antwortet nicht',
 
   }
 }
