@@ -645,6 +645,7 @@ modalDeleteBtn.addEventListener('click', async (e) => {
         lobbyPlayerAkk.style.display = 'none';
 
         modalBody.textContent = getTranslation('delete_success');
+        modalDeleteBtn.style.display = 'none';
         modalTitle.textContent = '';
       }else {
         modalBody.textContent = getTranslation('delete_error');
