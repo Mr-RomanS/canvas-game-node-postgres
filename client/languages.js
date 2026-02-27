@@ -67,7 +67,8 @@ export const translations = {
     successfullReg:'You have successfull registered!  Log in your account',
     FailedToWrite:'Error: Failed to write to the database',
     FailedConnectServer:'Failed to connect to the server',
-    
+    avatar_upload_error:'The file is too large! Max 5MB',
+
   },
 
   ua: {
@@ -138,6 +139,7 @@ export const translations = {
     successfullReg:'Ви успішно зареєстровані! Увійдіть у свій обліковий запис',
     FailedToWrite:'Помилка: Не вдалося записати в базу даних',
     FailedConnectServer:'Не вдалося підключитися до сервера',
+    avatar_upload_error:'Файл занадто великий! Максимум 5 МБ',
     
   },
 
@@ -209,6 +211,7 @@ export const translations = {
     successfullReg:'Sie haben sich erfolgreich registriert! Melden Sie sich in Ihrem Konto an',
     FailedToWrite:'Fehler: Fehler beim Schreiben in die Datenbank',
     FailedConnectServer:'Verbindung zum Server fehlgeschlagen',
-
+    avatar_upload_error:'Die Datei ist zu groß! Maximal 5 MB',
+    
   }
 }

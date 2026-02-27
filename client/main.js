@@ -47,6 +47,7 @@ const signInForm = document.getElementById('signInForm');
 const logInEmailInput = document.getElementById('logInEmailInput');
 const logInPasswordInput = document.getElementById('logInPasswordInput');
 //-----Форма для смены логина в аккаунт.
+const avatarUploadMessage = document.getElementById('avatarUploadMessage');
 const changeNameForm = document.getElementById('changeNameForm');
 const newLoginMessage = document.getElementById('newLoginMessage');
 const loginPlayers = document.getElementById('loginPlayers');
@@ -410,12 +411,15 @@ avatarInput.addEventListener('change', async () => {
       const data = await response.json();
       // Обновляем аватарку на странице ссылкой с сервера
       avatarPlayer.src = data.avatarUrl;
+      avatarUploadMessage.style.display = 'none';
     }else{
       const error = await response.text();
-      alert('Ошибка загрузки: ' + error);
+      console.log('Upload error: ' + error);
+      avatarUploadMessage.textContent = getTranslation('avatar_upload_error');
+      avatarUploadMessage.style.color = 'red';
     }
   }catch (err) {
-        console.error('Ошибка сети:', err);
+        console.error('Network error:', err);
     }
 });
 
@@ -463,8 +467,6 @@ signUpForm.addEventListener('submit', async (event) =>{
   }
 
 })
-
-
 //------- Форма  входа в аккаунт.----
 signInForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -512,7 +514,6 @@ signInForm.addEventListener('submit', async (event) => {
         warningInCorrectPass.style.display = 'block';
     }
 });
-
 //----- сменa логина в аккаунт.
 changeNameForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -557,7 +558,6 @@ changeNameForm.addEventListener('submit', async (event) => {
       newLoginMessage.style.color = 'red';
     }
 });
-
 //----- сменa пароля в аккаунт.
 changePasswordForm.addEventListener('submit', async(event) =>{
   event.preventDefault();
@@ -601,7 +601,6 @@ changePasswordForm.addEventListener('submit', async(event) =>{
     passwordMessage.style.color = '#8B1E1E';
   }
 })
-
 togglePassImages.forEach(img => {
     img.addEventListener('click', () => {
         const input = img.previousElementSibling; // берём input рядом
