@@ -23,6 +23,7 @@ app.use(express.json());
 
 const session = require('express-session');
 
+
 app.use(session({
     secret: process.env.SESSION_PASSWORD, // любая длинная строка
     resave: false,
@@ -125,19 +126,32 @@ app.post('/update-username', async (req, res) =>{
     }
 })
 
-app.post('/logout', (req, res) => {
-    // Команда destroy полностью удаляет сессию из "блокнота" сервера
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Ошибка при выходе:', err);
-            return res.status(500).send('Не удалось выйти');
-        }
-        // Очищаем куку в браузере пользователя
-        res.clearCookie('connect.sid'); 
-        res.status(200).send('Выход выполнен успешно');
-    });
-});
+//--------Изменение пароля.
+app.post('/update-password', async (req,res) =>{
+    try{
+        const { oldPassword, newPassword, email} = req.body;
 
+        const userResult = await dbClient.query('SELECT * FROM users WHERE email = $1', [email]);
+        const user = userResult.rows[0];
+
+        if(!user){
+            return res.status(404).send('User not found');
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
+        if(!isMatch){
+            return res.status(401).send('Old password is incorrect');
+        }
+
+        const newHash = await bcrypt.hash(newPassword, 10);
+
+        await dbClient.query('UPDATE users SET password_hash = $1 WHERE email = $2', [newHash, email]);
+        res.status(200).send('Password updated successfully');
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Server error while updating password')
+    }
+})
 
 //------Настройка места хранения---- Авто-создание папки, если её нет
 const uploadDir = path.join(__dirname, 'uploads');
@@ -164,12 +178,14 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
+//----ограничения по объему картинки.
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // Ограничение 5 МБ
 })
 
+//---Загрузка аватара в аккаунт
 app.use('/uploads', express.static(uploadDir));
 app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
     try {
@@ -210,6 +226,20 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         res.status(500).send('Ошибка сервера при загрузке аватара');
     }
 });
+
+app.post('/logout', (req, res) => {
+    // Команда destroy полностью удаляет сессию из "блокнота" сервера
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Ошибка при выходе:', err);
+            return res.status(500).send('Не удалось выйти');
+        }
+        // Очищаем куку в браузере пользователя
+        res.clearCookie('connect.sid'); 
+        res.status(200).send('Выход выполнен успешно');
+    });
+});
+
 
 app.delete('/delete-account', async (req, res) => {
     if(!req.session.user){

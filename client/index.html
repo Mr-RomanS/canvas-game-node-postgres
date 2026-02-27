@@ -13,30 +13,30 @@
 
 
 <header>
-        <p id="logo">
-            <span id="logo-main">Labyrinth</span><br> 
-            <span id="logo-sub">game</span>
-        </p>
+    <p id="logo">
+        <span id="logo-main">Labyrinth</span><br> 
+        <span id="logo-sub">game</span>
+    </p>
 
-        <div id="headerBlock">
-            <div id="language_list">
-                <button id="langBtn" type="button">
-                    <img src="images/menu_icons/globe-solid-full.svg" alt="globe">
-                    <span id="langBtnText" data-i18n="langBtnText">Language</span>
-                </button>
+    <div id="headerBlock">
+        <div id="language_list">
+            <button id="langBtn" type="button">
+                <img src="images/menu_icons/globe-solid-full.svg" alt="globe">
+                <span id="langBtnText" data-i18n="langBtnText">Language</span>
+            </button>
 
-                <div id="langPopup" hidden>
-                    <button type="button" data-lang="en">EN - English</button>
-                    <button type="button" data-lang="ua">UA - Українська</button>
-                    <button type="button" data-lang="de">DE - Deutsch</button>
-                </div>
+            <div id="langPopup" hidden>
+                <button type="button" data-lang="en">EN - English</button>
+                <button type="button" data-lang="ua">UA - Українська</button>
+                <button type="button" data-lang="de">DE - Deutsch</button>
             </div>
-
-            <span id="spanMenu" data-i18n="TextMenu">Menu</span>
-            <button id="MenubBtn"> <img id="btn_Menu" src="images/menu_icons/bars-solid-full.svg" alt="menu icons"> </button> 
         </div>
+
+        <span id="spanMenu" data-i18n="TextMenu">Menu</span>
+        <button id="MenubBtn"> <img id="btn_Menu" src="images/menu_icons/bars-solid-full.svg" alt="menu icons"> </button> 
+    </div>
     
-    </header>
+</header>
 
 
 <nav id="sideMenu">
@@ -57,7 +57,7 @@
             <h3 data-i18n="SignInH3">Sign in</h3>
             <p id="SignUpSuccessfullText">You have successfull registered! <br> Log in your account</p>
 
-        <form id="signInForm" autocomplete="on">
+        <form id="signInForm" autocomplete="on" >
                 <input
                 id="logInEmailInput"
                 type="email"
@@ -207,7 +207,7 @@
         </li>
         <hr>
         <li>
-            <form id="changeNameForm" >
+            <form id="changeNameForm" autocomplete="on">
                 <label data-i18n="changeNameLabel">Change your Login</label>
                 <p id="newLoginMessage"></p>
                 <input type="text" minlength="3" maxlength="20" id="loginPlayers">
@@ -215,7 +215,7 @@
             </form>
             <hr>
 
-            <form id="changePasswordForm">
+            <form id="changePasswordForm" autocomplete="on">
 
             <label data-i18n="OldPasswordLabel">Old Password</label>
             <p id="passwordMessage"></p>

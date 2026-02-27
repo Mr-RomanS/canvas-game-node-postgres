@@ -571,28 +571,46 @@ changeNameForm.addEventListener('submit', async (event) => {
 });
 
 //----- сменa пароля в аккаунт.
-changePasswordForm.addEventListener('submit', (event) =>{
+changePasswordForm.addEventListener('submit', async(event) =>{
   event.preventDefault();
 
-  const savedPassword = localStorage.getItem('password');
+  const oldPass = oldPassPlayer.value;
+  const newPass = newPassPlayer.value;
+  const currentEmail = emailPlayer.textContent;
 
-  let oldPass = oldPassPlayer.value;
-  let newPass = newPassPlayer.value;
-
-    // Сброс сообщений
   passwordMessage.textContent = '';
-  
-  if(savedPassword === oldPass){
-    localStorage.setItem('password', newPass);
-    passwordMessage.textContent = 'Password changed successfully';
-    passwordMessage.style.color = 'green';
 
-  }else{
-    passwordMessage.textContent = 'Old password is incorrect';
+  try{
+    const response = await fetch('/update-password', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        oldPassword: oldPass,
+        newPassword: newPass,
+        email: currentEmail
+      })
+    });
+
+    if(response.ok){
+      passwordMessage.textContent = 'Password changet successufully';
+      passwordMessage.style.color = 'green';
+
+      oldPassPlayer.value = '';
+      newPassPlayer.value = '';
+    }else if (response.status === 401) {
+      // Прямое указание текста при неверном пароле
+      passwordMessage.textContent = 'Old password is incorrect';
+      passwordMessage.style.color = '#8B1E1E';
+    } else {
+      // Для всех остальных ошибок (500 и т.д.)
+      passwordMessage.textContent = 'Update failed. Try again';
+      passwordMessage.style.color = '#8B1E1E';
+    }
+  }catch(err){
+    console.error('Ошибка смены пароля:', err);
+    passwordMessage.textContent = 'Server connection error';
     passwordMessage.style.color = '#8B1E1E';
   }
-  oldPassPlayer.value = '';
-  newPassPlayer.value = '';
 })
 
 togglePassImages.forEach(img => {
