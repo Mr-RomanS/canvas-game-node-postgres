@@ -61,9 +61,6 @@ const modalBody = document.getElementById('modalBody');
 const modalDeleteBtn = document.getElementById('modalDeleteBtn');
 const modalTitle = document.getElementById('modalTitle');
 
-let lastUrl = null;
-
-
 
 // Вызываем функцию проверки СРАЗУ при загрузке страницы
 const checkAuth = async () => {
@@ -639,8 +636,8 @@ logoutButton.addEventListener('click', async () => {
     }
 });
 
-// -----Удаление сохраненных логин и пароля.-----
 
+// -----Предупреждение о Удаление сохраненных логин и пароля.-----
 bthDelete.addEventListener('click', (e) =>{
   if(e){
     modalBody.textContent = 'Are You sure you want to Delete your account?';
@@ -653,7 +650,8 @@ bthDelete.addEventListener('click', (e) =>{
     
 })
 
-modalDeleteBtn.addEventListener('click', async () => {
+// -----Удаление сохраненных логин и пароля.-----
+modalDeleteBtn.addEventListener('click', async (e) => {
 
     try{
       const response = await fetch('/delete-account', {
@@ -668,14 +666,19 @@ modalDeleteBtn.addEventListener('click', async () => {
         isAuthenticated = false;
         lobbyMenu.style.display = 'block';
         lobbyPlayerAkk.style.display = 'none';
-        moveThemeCard(false);
 
-        alert('Ваш аккаунт полностью удален.');
+          modalBody.textContent = 'Ваш аккаунт полностью удален.';
+          modalDeleteBtn.style.display = 'none';
+          modalOkBtn.style.display = 'none';
+          modalTitle.textContent = '';
       }else {
-            alert('Не удалось удалить аккаунт. Попробуйте позже.');
+            modalBody.textContent = 'Не удалось удалить аккаунт. Попробуйте позже.';
+          modalDeleteBtn.style.display = 'none';
+          modalOkBtn.style.display = 'none';
+          modalTitle.textContent = '';
         }
     }catch (err) {
-        console.error('Ошибка сети при удалении:', err);
+        console.error('Network error during deletion:', err);
     }
 });
 
