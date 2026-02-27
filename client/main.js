@@ -367,15 +367,18 @@ setupPasswordToggle('btnPassIconIn', 'iconPassIn');
 
 
 // ------Открытие и закрытие модального окна.
-
 function openModalWindow() {
     closeMenu(); 
     modalOverlay.style.display = 'flex';
 }
-
+function showModalMessage(text) {
+    modalBody.textContent = text;
+    modalTitle.textContent = '';
+    openModalWindow();
+}
 iAgreeText.addEventListener('click', (e) => {
         e.preventDefault();
-         openModalWindow();
+        openModalWindow();
 });
 closeModal.addEventListener('click', () =>{
   modalOverlay.style.display = 'none';
@@ -384,9 +387,8 @@ modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) {
         modalOverlay.style.display = 'none';
     }
-    modalDeleteBtn.style.display = 'none';
-    modalOkBtn.style.display = 'block';
 });
+
 
 //-------Меняем аватарку внутри аккаунта.----
 avatarInput.addEventListener('change', async () => {
@@ -608,7 +610,6 @@ togglePassImages.forEach(img => {
         }
     });
 });
-
 //-------Выходим из аккаунта.--------
 logoutButton.addEventListener('click', async () => {
     try {
@@ -629,32 +630,26 @@ logoutButton.addEventListener('click', async () => {
             // Опционально: очищаем поля на экране аккаунта
             loginPlayer.textContent = '';
             emailPlayer.textContent = '';
-            warningInCorrectPass.textContent = 'Server is not responding';
+            warningInCorrectPass.textContent = getTranslation('respondingMessage');
             closeMenu();
         } else {
-            alert('Ошибка сервера при попытке выйти');
+          showModalMessage(getTranslation('ServerErrorToLogOut'));
         }
     } catch (err) {
-        console.error('Ошибка сети при выходе:', err);
+        console.error('Network error during logout:', err);
     }
 });
-
-
 // -----Предупреждение о Удаление сохраненных логин и пароля.-----
-
-
 bthDelete.addEventListener('click', (e) =>{
   if(e){
     modalBody.textContent = getTranslation('confirm_delete');
     modalDeleteBtn.style.display = 'block';
-    modalOkBtn.style.display = 'none';
     modalTitle.textContent = '';
     openModalWindow();
     closeMenu();
   }
     
 })
-
 // -----Удаление сохраненных логин и пароля.-----
 modalDeleteBtn.addEventListener('click', async (e) => {
 
@@ -673,13 +668,9 @@ modalDeleteBtn.addEventListener('click', async (e) => {
         lobbyPlayerAkk.style.display = 'none';
 
         modalBody.textContent = getTranslation('delete_success');
-        modalDeleteBtn.style.display = 'none';
-        modalOkBtn.style.display = 'none';
         modalTitle.textContent = '';
       }else {
         modalBody.textContent = getTranslation('delete_error');
-        modalDeleteBtn.style.display = 'none';
-        modalOkBtn.style.display = 'none';
         modalTitle.textContent = '';
         }
     }catch (err) {

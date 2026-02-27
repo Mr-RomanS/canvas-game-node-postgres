@@ -610,16 +610,13 @@ header{
     flex-shrink: 0;
     padding-top: 10px;
 }
+
+#modalDeleteBtn,
 #modalOkBtn{
-    display: block;
-    @include buttonSign;
-}
-#modalDeleteBtn{
     display: none;
-    
+    @include buttonSign;
 }
 #modalDeleteBtn{
-    @include buttonSign;
     color: white !important;
     background-color: var( --danger) !important;
 }

@@ -51,12 +51,14 @@ export const translations = {
     rules_text_9: '- We commit not to share your contact information with third parties.',
     rules_text_10: '- The user has the right to permanently delete their account at any time, which will result in the immediate removal of all their data and files from the server.',
     rules_text_11: '- Any attempts to hack the game, bypass the authorization system, or exploit server vulnerabilities are prohibited!',
-
     confirm_delete: 'Are you sure you want to delete your account?',
     delete_success: 'Your account has been completely deleted.',
     delete_error: 'Failed to delete the account. Please try again later.',
     modalAgreeBtn: 'I Agree',
     modalDeleteBtn: 'I Am Sure',
+
+    respondingMessage:'Server is not responding',
+    ServerErrorToLogOut:'Server error while attempting to log out',
   },
 
   ua: {
@@ -111,12 +113,15 @@ export const translations = {
     rules_text_9: '- Ми зобов’язуємось не передавати ваші контактні дані третім особам.',
     rules_text_10: '- Користувач має право в будь-який момент повністю видалити свій обліковий запис, що призведе до негайного видалення всіх його даних та файлів із сервера.',
     rules_text_11: '- Заборонені будь-які спроби зламати гру, обійти систему авторизації або використати вразливості сервера!',
-
     confirm_delete: 'Ви впевнені, що хочете видалити свій обліковий запис?',
     delete_success: 'Ваш обліковий запис повністю видалено.',
     delete_error: 'Не вдалося видалити обліковий запис. Спробуйте пізніше.',
     modalAgreeBtn: 'Я погоджуюся',
     modalDeleteBtn: 'Я впевнений / Я впевнена',
+
+    respondingMessage:'Сервер не відповідає',
+    ServerErrorToLogOut:'Помилка сервера під час спроби вийти',
+
   },
 
   de: {
@@ -171,11 +176,13 @@ export const translations = {
     rules_text_9: '- Wir verpflichten uns, Ihre Kontaktdaten nicht an Dritte weiterzugeben.',
     rules_text_10: '- Der Nutzer hat das Recht, sein Konto jederzeit vollständig zu löschen, was die sofortige Entfernung aller seiner Daten und Dateien vom Server zur Folge hat.',
     rules_text_11: '- Jegliche Versuche, das Spiel zu hacken, das Autorisierungssystem zu umgehen oder Server-Schwachstellen auszunutzen, sind verboten!',
-
     confirm_delete: 'Sind Sie sicher, dass Sie Ihr Konto löschen möchten?',
     delete_success: 'Ihr Konto wurde vollständig gelöscht.',
     delete_error: 'Das Konto konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut.',
     modalAgreeBtn: 'Ich stimme zu',
     modalDeleteBtn: 'Ich bin sicher',
+
+    respondingMessage:'Der Server antwortet nicht',
+    ServerErrorToLogOut:'Serverfehler beim Versuch, sich abzumelden',
   }
 }
