@@ -214,19 +214,28 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         res.status(500).send('Ошибка сервера при загрузке аватара');
     }
 });
+
+
 app.post('/logout', (req, res) => {
     // Команда destroy полностью удаляет сессию из "блокнота" сервера
     req.session.destroy((err) => {
         if (err) {
-            console.error('Ошибка при выходе:', err);
-            return res.status(500).send('Не удалось выйти');
+            console.error('Error during logout:', err);
+            return res.status(500).json({ 
+                error: 'LOGOUT_FAILED', 
+                message: 'Could not destroy session' 
+            }
+            );
         }
         // Очищаем куку в браузере пользователя
         res.clearCookie('connect.sid'); 
-        res.status(200).send('Выход выполнен успешно');
+        res.status(200).json({ 
+            success: true, 
+            message: 'Logged out successfully' 
+        }
+        );
     });
 });
-
 
 app.delete('/delete-account', async (req, res) => {
     // Если сессии нет, возвращаем 401 и поясняем причину
@@ -278,7 +287,6 @@ app.delete('/delete-account', async (req, res) => {
         });
     }
 });
-
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
