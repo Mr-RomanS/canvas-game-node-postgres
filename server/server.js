@@ -282,9 +282,15 @@ app.delete('/delete-account', async (req, res) => {
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).send('File too large! Max 5MB');
+            return res.status(400).json({
+                error:'FIRL_TOO_LARGE',
+                message: 'File too large! Max 5MB',
+            });
         }
     }
     console.error(err.stack);
-    res.status(500).send('Something went wrong on the server');
+    res.status(500).json({
+        error: 'SERVER_ERROR',
+        message: 'Something went wrong on the server',
+    });
 });
