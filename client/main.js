@@ -493,7 +493,6 @@ changeNameForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
     const newLogin = loginPlayers.value.trim();
-    const currentEmail = emailPlayer.textContent;
 
     newLoginMessage.textContent = '';
 
@@ -509,9 +508,9 @@ changeNameForm.addEventListener('submit', async (event) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           newUsername: newLogin,
-          email: currentEmail,
         })
       });
+      const data = await response.json();
 
       if(response.ok){
         newLoginMessage.textContent = getTranslation('SuccessfullyUpdateInDb');
@@ -521,8 +520,7 @@ changeNameForm.addEventListener('submit', async (event) => {
 
         loginPlayers.value = '';
       }else{
-        const errorText = await response.text();
-        console.log(errorText)
+        console.log('Server error:', data.error, data.message);
         newLoginMessage.textContent = 'Error!';
         newLoginMessage.style.color = 'red';
       }
