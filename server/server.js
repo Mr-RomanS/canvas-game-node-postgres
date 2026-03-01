@@ -4,7 +4,9 @@ const path = require('path'); // Встроенный модуль для раб
 const { Client } = require('pg');// pg — «переводчик» для работы с базой PostgreSQL.
 const bcrypt = require('bcrypt'); // библиотека шифровки пароля!
 const multer = require('multer'); //для безопасности и надежности загрузки файлов в Node.js.
-const fs = require('fs');
+const fs = require('fs');// fs (File System) — позволяет серверу работать с файлами: читать, удалять и создавать их.
+const session = require('express-session');//позволяет серверу "узнавать" пользователя между запросами, создавая уникальную сессию (временную память).
+
 
 // Загружает секретные данные (пароли, ключи) из файла .env в память сервера
 require('dotenv').config();
@@ -16,7 +18,6 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '../client')));
 // 5. Позволяем серверу понимать JSON, который присылает твой fetch
 app.use(express.json());
-const session = require('express-session');
 
 app.use(session({
     secret: process.env.SESSION_PASSWORD, // любая длинная строка
@@ -24,9 +25,13 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: false, // ставь true только если у тебя HTTPS
+        // secure: true,
+        // sameSite: 'lax', //Отправляй эту куку, только если запрос идет именно с моего сайта,
         maxAge: 24 * 60 * 60 * 1000 // кука будет жить 1 день
     }
 }));
+
+
 app.get('/check-auth', (req, res) => {
     if (req.session.user) {
         res.status(200).json({
@@ -44,7 +49,6 @@ app.get('/check-auth', (req, res) => {
     }
 });
 
-
 const dbClient = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -56,15 +60,13 @@ const dbClient = new Client({
 dbClient.connect()
     .then(() => {
         app.listen(PORT, () => {
-            console.log(`Сервер ожил! Слушаю на http://localhost:${PORT}`);
+            console.log(`The server is alive! Listening on http://localhost:${PORT}`);
         });
     })
     .catch(err => {
-        console.error('КРИТИЧЕСКАЯ ОШИБКА ПОДКЛЮЧЕНИЯ К БАЗЕ:', err);
+        console.error('CRITICAL DATABASE CONNECTION ERROR:', err);
         process.exit(1); // Остановить сервер, если базы нет
     });
-
-
 
 app.post('/register', async (req, res) =>{
     try{
@@ -86,7 +88,6 @@ app.post('/register', async (req, res) =>{
         });
     }
 })
-
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -138,9 +139,11 @@ app.post('/login', async (req, res) => {
         });
     }
 });
+
 app.post('/update-username', async (req, res) =>{
     try{
-        const { newUsername, email} = req.body;
+        const { newUsername} = req.body;
+        const email = req.session.user.email;
 
         if(!newUsername){
             return res.status(400).json({ 
@@ -171,6 +174,7 @@ app.post('/update-username', async (req, res) =>{
         });
     }
 })
+
 //--------Изменение пароля.
 app.post('/update-password', async (req,res) =>{
     try{
@@ -209,11 +213,13 @@ app.post('/update-password', async (req,res) =>{
         })
     }
 })
+
 //------Настройка места хранения---- Авто-создание папки, если её нет
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir);
 }
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir); // Используем абсолютный путь
