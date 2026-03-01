@@ -70,6 +70,8 @@ app.post('/register', async (req, res) =>{
         res.status(500).send('Ошибка при записи в базу');
     }
 })
+
+
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -83,20 +85,41 @@ app.post('/login', async (req, res) => {
 
             if (isMatch) {
                 // ПАРОЛЬ ВЕРНЫЙ
-                req.session.user = { id: user.id, username: user.username, email: user.email, avatar_url: user.avatar_url };
-                res.json({ username: user.username, email: user.email, avatar_url: user.avatar_url });
+                req.session.user = { 
+                    id: user.id, 
+                    username: user.username, 
+                    email: user.email, 
+                    avatar_url: user.avatar_url 
+                };
+
+                // Отправляем данные пользователя обратно клиенту
+                res.status(200).json({ 
+                    success: true,
+                    username: user.username, 
+                    email: user.email, 
+                    avatar_url: user.avatar_url 
+                });
             } else {
-                // ПАРОЛЬ НЕВЕРНЫЙ - отправляем ошибку!
-                console.log("Неверный пароль для:", email);
-                res.status(401).send('Incorrect password'); 
+                // ПАРОЛЬ НЕВЕРНЫЙ
+                console.log("Incorrect password for:", email);
+                res.status(401).json({ 
+                    error: 'INVALID_PASSWORD', 
+                    message: 'Incorrect password' 
+                });
             }
         } else {
-            // EMAIL НЕ НАЙДЕН
-            res.status(401).send('User not found');
+            // ТАКОЙ EMAIL НЕ ЗАРЕГИСТРИРОВАН
+            res.status(401).json({ 
+                error: 'USER_NOT_FOUND', 
+                message: 'User with this email not found' 
+            });
         }
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
+        console.error('Login error:', err);
+        res.status(500).json({ 
+            error: 'SERVER_ERROR', 
+            message: 'Internal server error during login' 
+        });
     }
 });
 app.post('/update-username', async (req, res) =>{
@@ -132,9 +155,6 @@ app.post('/update-username', async (req, res) =>{
         });
     }
 })
-
-
-
 //--------Изменение пароля.
 app.post('/update-password', async (req,res) =>{
     try{
