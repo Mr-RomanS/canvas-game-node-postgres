@@ -184,7 +184,7 @@ app.post('/update-password', async (req,res) =>{
             return res.status(401).json({ error: 'NOT_AUTHORIZED' });
         }
         const email = req.session.user.email;
-        
+
         const userResult = await dbClient.query('SELECT password_hash FROM users WHERE email = $1', [email]);
         const user = userResult.rows[0];
 
@@ -223,18 +223,23 @@ const storage = multer.diskStorage({
         cb(null, uploadDir); // Используем абсолютный путь
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+
+        const username = req.session.user ? req.session.user.username : 'unknown';
+        const uniqueSuffix = Date.now();
+        const extension = path.extname(file.originalname);
+        cb(null, username + '-' + uniqueSuffix + extension);
     }
 });
+
 //  Фильтр безопасности: только изображения
 const fileFilter = (req, file, cb) => {
     if(file.mimetype.startsWith('image/')){
         cb(null, true);
     }else{
-        cb(new Error('Недопустимый тип файла! Только изображения.'), false);
+        cb(new Error('Invalid file type! Images only.'), false);
     }
 };
+
 //----ограничения по объему картинки.
 const upload = multer({
     storage: storage,
@@ -243,6 +248,7 @@ const upload = multer({
 })
 //---Загрузка аватара в аккаунт
 app.use('/uploads', express.static(uploadDir));
+
 
 app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
     try {
@@ -297,6 +303,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         });
     }
 });
+
 app.post('/logout', (req, res) => {
     // Команда destroy полностью удаляет сессию из "блокнота" сервера
     req.session.destroy((err) => {
