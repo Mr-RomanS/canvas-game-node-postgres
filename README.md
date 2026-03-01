@@ -42,16 +42,6 @@ The project demonstrates frontend rendering, backend API architecture, authentic
 
 ---
 
-## Project Structure
-
-canvas-game-node-postgres/
-│
-├── client/        # Frontend (Canvas game)
-├── server/        # Express backend
-├── .gitignore
-└── README.md
-
----
 
 ## Installation
 

@@ -104,21 +104,37 @@ app.post('/update-username', async (req, res) =>{
         const { newUsername, email} = req.body;
 
         if(!newUsername){
-            return res.status(400).send('Логин не может быть пустым')
+            return res.status(400).json({ 
+                error: 'EMPTY_USERNAME', 
+                message: 'Username cannot be empty' 
+            });
         }
 
         const queryText = 'UPDATE users SET username = $1 WHERE email = $2';
         const result = await dbClient.query(queryText, [newUsername, email]);
 
         if(result.rowCount > 0) {
-            res.status(200).send('Логин успешно изменен');
+            res.status(200).json({ 
+                success: true, 
+                message: 'Username updated successfully' 
+            });
         }else{
-            res.status(404).send('Пользователь не найден');
+            res.status(404).json({ 
+                error: 'USER_NOT_FOUND', 
+                message: 'User not found' 
+            });
         }
     }catch (err) {
-        res.status(500).send('Ошибка при обновлении в базе данных');
+        console.error('Update username error:', err);
+        res.status(500).json({ 
+            error: 'DATABASE_ERROR', 
+            message: 'Error updating database' 
+        });
     }
 })
+
+
+
 //--------Изменение пароля.
 app.post('/update-password', async (req,res) =>{
     try{
@@ -128,21 +144,33 @@ app.post('/update-password', async (req,res) =>{
         const user = userResult.rows[0];
 
         if(!user){
-            return res.status(404).send('User not found');
+            return res.status(404).json({
+                error: 'USER_NOT_FOUND', 
+                message: 'User with this email does not exist'
+            })
         }
 
         const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
         if(!isMatch){
-            return res.status(401).send('Old password is incorrect');
+            return res.status(401).json({ 
+                error: 'INVALID_OLD_PASSWORD', 
+                message: 'The provided old password does not match' 
+            })
         }
 
         const newHash = await bcrypt.hash(newPassword, 10);
 
         await dbClient.query('UPDATE users SET password_hash = $1 WHERE email = $2', [newHash, email]);
-        res.status(200).send('Password updated successfully');
+        res.status(200).json({ 
+            success: true, 
+            message: 'Password has been updated in the database' 
+        })
     }catch(err){
         console.error(err);
-        res.status(500).send('Server error while updating password')
+        res.status(500).json({ 
+            error: 'SERVER_ERROR', 
+            message: 'Internal error during password update' 
+        })
     }
 })
 //------Настройка места хранения---- Авто-создание папки, если её нет
@@ -229,8 +257,6 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         });
     }
 });
-
-
 app.post('/logout', (req, res) => {
     // Команда destroy полностью удаляет сессию из "блокнота" сервера
     req.session.destroy((err) => {
