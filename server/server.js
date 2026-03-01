@@ -175,10 +175,15 @@ const upload = multer({
 })
 //---Загрузка аватара в аккаунт
 app.use('/uploads', express.static(uploadDir));
+
 app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
     try {
-        if (!req.session.user) return res.status(401).send('Не авторизован');
-        if (!req.file) return res.status(400).send('Файл не выбран или слишком велик');
+        if (!req.session.user){
+            return res.status(401).json({error: 'AUTH_REQIRED', message:'User not authorizired'});
+        }
+        if (!req.file){
+            return res.status(400).json({error:'FILE_MISSING', message:'No file uploaded or file too large'});
+        }
 
         const userEmail = req.session.user.email;
         const newAvatarUrl = `/uploads/${req.file.filename}`;
@@ -195,7 +200,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
 
             if (fs.existsSync(oldPath)) {
                 fs.unlinkSync(oldPath);
-                console.log(`Удален старый аватар: ${oldPath}`);
+                console.log(`Deleted old avatar file: ${oldPath}`);
             }
         }
 
@@ -203,15 +208,25 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         await dbClient.query('UPDATE users SET avatar_url = $1 WHERE email = $2', [newAvatarUrl, userEmail]);
         req.session.user.avatarUrl = newAvatarUrl;
 
-        res.status(200).json({ avatarUrl: newAvatarUrl });
+        res.status(200).json({ 
+            success: true,
+            avatarUrl: newAvatarUrl, 
+            message: 'Avatar uploaded and database updated' 
+        });
 
     } catch (err) {
-        console.error('Ошибка загрузки:', err);
+        console.error('Upload error details:', err);
         // Если это ошибка Multer (например, файл большой), отправим понятный текст
         if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).send('Файл слишком большой! Максимум 5МБ.');
+            return res.status(400).json({ 
+                error: 'FILE_TOO_LARGE', 
+                message: 'Image exceeds 5MB limit' 
+            });
         }
-        res.status(500).send('Ошибка сервера при загрузке аватара');
+        res.status(500).json({ 
+            error: 'UPLOAD_FAILED', 
+            message: 'Internal server error during avatar upload' 
+        });
     }
 });
 
@@ -236,7 +251,6 @@ app.post('/logout', (req, res) => {
         );
     });
 });
-
 app.delete('/delete-account', async (req, res) => {
     // Если сессии нет, возвращаем 401 и поясняем причину
     if(!req.session.user){
