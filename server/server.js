@@ -64,10 +64,16 @@ app.post('/register', async (req, res) =>{
         const queryText = 'INSERT INTO users (username, email, password_hash) VALUES($1, $2, $3)';
         await dbClient.query(queryText, [username, email, hash]);
 
-        res.status(200).send('Регистрация прошла успешно!');
+        res.status(200).json({ 
+            success: true, 
+            message: 'User registered successfully' 
+        });
     }catch(err){
-        console.error(err);
-        res.status(500).send('Ошибка при записи в базу');
+        console.error('Registration error:', err);
+        res.status(500).json({ 
+            error: 'REGISTRATION_FAILED', 
+            message: 'Error saving user to database' 
+        });
     }
 })
 
