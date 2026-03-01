@@ -1,53 +1,157 @@
-# 2D Canvas Game (Portfolio Project)
+# 2D Canvas Game (Fullstack Portfolio Project)
 
-![Screenshot](path/to/screenshot.png)
+## Overview
 
-## Roadmap
-- [x] Frontend basic rendering and player movement
-- [ ] Game loop optimization
-- [ ] Collision system
-- [ ] Score tracking
-- [x] Backend API with PostgreSQL
-- [ ] Deployment
-- [ ] Multiplayer support with WebSockets
-- [ ] In-game chat with SocketAI
-- [ ] Contact form integration (EmailJS/Formspree)
+This project is a fullstack browser-based 2D game built using the Canvas API on the frontend and Node.js with Express and PostgreSQL on the backend.
 
-## Description
-Browser-based 2D game built with:
+The project demonstrates frontend rendering, backend API architecture, authentication system, session handling, file uploads, and database integration.
+
+---
+
+## Tech Stack
+
+### Frontend
 - HTML
 - CSS
-- Vanilla JavaScript (Canvas API)
-- Node.js 
+- Vanilla JavaScript
+- Canvas API
+
+### Backend
+- Node.js
 - Express
 - PostgreSQL
+- bcrypt (password hashing)
+- express-session (session management)
+- multer (file uploads)
+- dotenv (environment configuration)
 
-A simple 2D game to demonstrate frontend skills and eventually fullstack development including backend score tracking.
+---
 
-## Project Goals
-- Demonstrate frontend architecture
-- Implement game loop and rendering
-- Add backend for score storage
-- Implement REST API
-- Deploy fullstack application
+## Features
 
-## Current Status
-Frontend: basic rendering and movement mechanics implemented.  
-Backend: planned, database not yet integrated.
+- 2D canvas rendering
+- Player movement mechanics
+- REST API structure
+- User registration
+- User authentication
+- Password hashing
+- Session-based authentication
+- File upload handling
+- PostgreSQL database integration
+- Multi-language support (English, German, Ukrainian).
 
-## Future Features
+---
 
-Planned enhancements for the project:
+## Project Structure
 
-- **Multiplayer mode**: implement real-time player interactions using WebSockets.
-- **Chat system**: integrate SocketAI to allow in-game messaging between players.
-- **Contact form/email notifications**: use a service (like EmailJS or Formspree) to let users send messages from the website to my email without exposing my personal email.
-- **Score leaderboard**: store player scores in PostgreSQL and display top players.
+canvas-game-node-postgres/
+│
+├── client/        # Frontend (Canvas game)
+├── server/        # Express backend
+├── .gitignore
+└── README.md
 
+---
 
-## How to Run Locally
-1. Clone the repository:
+## Installation
+
+### 1. Clone the repository
+
 ```bash
 git clone https://github.com/Mr-RomanS/canvas-game-node-postgres.git
+cd canvas-game-node-postgres/server
+```
 
+### 2. Install dependencies
 
+```bash
+npm install
+```
+
+npm will install all required dependencies defined in package.json.
+
+---
+
+## Environment Variables
+
+Create a `.env` file inside the `/server` directory.
+
+Example:
+
+```
+PORT=3000
+
+DB_HOST=localhost
+DB_USER=your_postgres_user
+DB_PASSWORD=your_postgres_password
+DB_NAME=your_database_name
+
+SESSION_PASSWORD=your_secret_key
+```
+---
+
+## Database Setup
+
+1. Install PostgreSQL locally.
+2. Create a new database.
+3. Update your `.env` file with correct database credentials.
+4. Make sure PostgreSQL server is running before starting the project.
+
+---
+
+## Running the Project
+
+### Development mode
+
+```bash
+npm run dev
+```
+
+(Requires nodemon installed as a dev dependency)
+
+### Production mode
+
+```bash
+npm start
+```
+
+The server will run at:
+
+http://localhost:3000
+
+---
+
+## Roadmap
+
+- [x] Basic frontend rendering
+- [x] Backend API structure
+- [x] PostgreSQL integration
+- [ ] Collision detection system
+- [ ] Leaderboard system
+- [ ] Multiplayer support using WebSockets
+- [ ] In-game chat
+- [ ] Deployment to cloud hosting
+
+---
+
+## Future Improvements
+
+- Real-time multiplayer functionality
+- Score storage and ranking system
+- Performance optimization
+- Full cloud deployment
+- Improved UI/UX design
+
+---
+
+## Status
+
+The project is actively under development.
+Core backend functionality and frontend rendering are implemented.
+Game mechanics and multiplayer features are currently in progress.
+
+---
+
+## Author
+
+Roman S.
