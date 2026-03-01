@@ -178,17 +178,15 @@ app.post('/update-username', async (req, res) =>{
 //--------Изменение пароля.
 app.post('/update-password', async (req,res) =>{
     try{
-        const { oldPassword, newPassword, email} = req.body;
-
-        const userResult = await dbClient.query('SELECT * FROM users WHERE email = $1', [email]);
-        const user = userResult.rows[0];
-
-        if(!user){
-            return res.status(404).json({
-                error: 'USER_NOT_FOUND', 
-                message: 'User with this email does not exist'
-            })
+        const { oldPassword, newPassword } = req.body;
+        
+        if (!req.session.user) {
+            return res.status(401).json({ error: 'NOT_AUTHORIZED' });
         }
+        const email = req.session.user.email;
+        
+        const userResult = await dbClient.query('SELECT password_hash FROM users WHERE email = $1', [email]);
+        const user = userResult.rows[0];
 
         const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
         if(!isMatch){
@@ -199,8 +197,8 @@ app.post('/update-password', async (req,res) =>{
         }
 
         const newHash = await bcrypt.hash(newPassword, 10);
-
         await dbClient.query('UPDATE users SET password_hash = $1 WHERE email = $2', [newHash, email]);
+
         res.status(200).json({ 
             success: true, 
             message: 'Password has been updated in the database' 
