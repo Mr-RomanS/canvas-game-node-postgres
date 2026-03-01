@@ -536,7 +536,6 @@ changePasswordForm.addEventListener('submit', async(event) =>{
 
   const oldPass = oldPassPlayer.value;
   const newPass = newPassPlayer.value;
-  const currentEmail = emailPlayer.textContent;
 
   const currentLang = localStorage.getItem('lang') || 'en';
 
@@ -549,7 +548,6 @@ changePasswordForm.addEventListener('submit', async(event) =>{
       body: JSON.stringify({
         oldPassword: oldPass,
         newPassword: newPass,
-        email: currentEmail
       })
     });
 
