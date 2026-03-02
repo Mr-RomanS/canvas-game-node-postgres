@@ -39,7 +39,6 @@ The project demonstrates frontend rendering, backend API architecture, authentic
 - File upload handling
 - PostgreSQL database integration
 - Multi-language support (English, German, Ukrainian).
-
 ---
 
 
@@ -121,6 +120,7 @@ http://localhost:3000
 - [ ] Multiplayer support using WebSockets
 - [ ] In-game chat
 - [ ] Deployment to cloud hosting
+- [ ] Google OAuth 2.0 integration (login and registration via Google account)
 
 ---
 
@@ -131,6 +131,8 @@ http://localhost:3000
 - Performance optimization
 - Full cloud deployment
 - Improved UI/UX design
+- Google Authentication: Migration to OAuth 2.0 to improve security and user experience (UX),
+  eliminating the need for manual password entry.
 
 ---
 
