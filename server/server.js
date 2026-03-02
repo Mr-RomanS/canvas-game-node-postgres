@@ -1,12 +1,12 @@
 
 const express = require('express');// 1. Подключаем библиотеку Express
 const path = require('path'); // Встроенный модуль для работы с путями
-const { Client } = require('pg');// pg — «переводчик» для работы с базой PostgreSQL.
+const { Client, Pool } = require('pg');// pg — «переводчик» для работы с базой PostgreSQL.
 const bcrypt = require('bcrypt'); // библиотека шифровки пароля!
 const multer = require('multer'); //для безопасности и надежности загрузки файлов в Node.js.
 const fs = require('fs');// fs (File System) — позволяет серверу работать с файлами: читать, удалять и создавать их.
 const session = require('express-session');//позволяет серверу "узнавать" пользователя между запросами, создавая уникальную сессию (временную память).
-
+const pgSession = require('connect-pg-simple')(session); // Подключаем хранилище сессий.
 
 // Загружает секретные данные (пароли, ключи) из файла .env в память сервера
 require('dotenv').config();
@@ -14,12 +14,26 @@ require('dotenv').config();
 const app = express();
 // 3. Указываем серверу порт (на каком "канале" он будет вещать)
 const PORT = process.env.PORT || 3000;
+
+const pgPool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+});
+
 // 4. ГЛАВНОЕ: Указываем серверу, где лежат твои картинки, стили и HTML.
 app.use(express.static(path.join(__dirname, '../client')));
 // 5. Позволяем серверу понимать JSON, который присылает твой fetch
 app.use(express.json());
 
+
 app.use(session({
+    store: new pgSession({
+        pool: pgPool,                // Твой пул подключений к БД
+        tableName: 'session'         // Имя таблицы, которую мы создали выше
+    }),
     secret: process.env.SESSION_PASSWORD, // любая длинная строка
     resave: false,
     saveUninitialized: false,
@@ -28,7 +42,8 @@ app.use(session({
         // secure: true,
         // sameSite: 'lax', //Отправляй эту куку, только если запрос идет именно с моего сайта,
         // name: 'my-custom-session-name', //"имя ярлыка".
-        maxAge: 24 * 60 * 60 * 1000 // кука будет жить 1 день
+        maxAge: 24 * 60 * 60 * 1000, // кука будет жить 1 день
+        httpOnly: true
     }
 }));
 
@@ -50,23 +65,20 @@ app.get('/check-auth', (req, res) => {
     }
 });
 
-const dbClient = new Client({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
-});
 
-dbClient.connect()
-    .then(() => {
+
+// Проверяем, что пул может достучаться до базы
+pgPool.connect()
+    .then(client => {
+        console.log('Database connected successfully via Pool');
+        client.release(); // Освобождаем соединение обратно в пул
         app.listen(PORT, () => {
-            console.log(`The server is alive! Listening on http://localhost:${PORT}`);
+            console.log(`Server is running on http://localhost:${PORT}`);
         });
     })
     .catch(err => {
-        console.error('CRITICAL DATABASE CONNECTION ERROR:', err);
-        process.exit(1); // Остановить сервер, если базы нет
+        console.error('Database connection error:', err);
+        process.exit(1);// Остановить сервер, если базы нет
     });
 
 app.post('/register', async (req, res) =>{
@@ -75,7 +87,7 @@ app.post('/register', async (req, res) =>{
         const hash = await bcrypt.hash(password, 10);
 
         const queryText = 'INSERT INTO users (username, email, password_hash) VALUES($1, $2, $3)';
-        await dbClient.query(queryText, [username, email, hash]);
+        await pgPool.query(queryText, [username, email, hash]);
 
         res.status(200).json({ 
             success: true, 
@@ -94,7 +106,7 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const result = await dbClient.query('SELECT * FROM users WHERE email = $1', [email]);
+        const result = await pgPool.query('SELECT * FROM users WHERE email = $1', [email]);
         const user = result.rows[0];
 
         if (user) {
@@ -154,7 +166,7 @@ app.post('/update-username', async (req, res) =>{
         }
 
         const queryText = 'UPDATE users SET username = $1 WHERE email = $2';
-        const result = await dbClient.query(queryText, [newUsername, email]);
+        const result = await pgPool.query(queryText, [newUsername, email]);
 
         if(result.rowCount > 0) {
             res.status(200).json({ 
@@ -186,7 +198,7 @@ app.post('/update-password', async (req,res) =>{
         }
         const email = req.session.user.email;
 
-        const userResult = await dbClient.query('SELECT password_hash FROM users WHERE email = $1', [email]);
+        const userResult = await pgPool.query('SELECT password_hash FROM users WHERE email = $1', [email]);
         const user = userResult.rows[0];
 
         const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
@@ -198,7 +210,7 @@ app.post('/update-password', async (req,res) =>{
         }
 
         const newHash = await bcrypt.hash(newPassword, 10);
-        await dbClient.query('UPDATE users SET password_hash = $1 WHERE email = $2', [newHash, email]);
+        await pgPool.query('UPDATE users SET password_hash = $1 WHERE email = $2', [newHash, email]);
 
         res.status(200).json({ 
             success: true, 
@@ -264,7 +276,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         const newAvatarUrl = `/uploads/${req.file.filename}`;
 
         // 1. Ищем старую аватарку в БД
-        const userResult = await dbClient.query('SELECT avatar_url FROM users WHERE email =$1', [userEmail]);
+        const userResult = await pgPool.query('SELECT avatar_url FROM users WHERE email =$1', [userEmail]);
         const oldAvatarUrl = userResult.rows[0]?.avatar_url;
 
         // 2. Удаляем старый файл, если он есть
@@ -280,7 +292,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         }
 
         // 3. Обновляем БД и Сессию
-        await dbClient.query('UPDATE users SET avatar_url = $1 WHERE email = $2', [newAvatarUrl, userEmail]);
+        await pgPool.query('UPDATE users SET avatar_url = $1 WHERE email = $2', [newAvatarUrl, userEmail]);
         req.session.user.avatarUrl = newAvatarUrl;
 
         res.status(200).json({ 
@@ -335,7 +347,7 @@ app.delete('/delete-account', async (req, res) => {
     const userEmail = req.session.user.email;
 
     try{
-        const userResult = await dbClient.query('SELECT avatar_url FROM users WHERE email = $1', [userEmail]);
+        const userResult = await pgPool.query('SELECT avatar_url FROM users WHERE email = $1', [userEmail]);
         const avatarUrl = userResult.rows[0]?.avatar_url;
 
         if(avatarUrl){
@@ -350,7 +362,7 @@ app.delete('/delete-account', async (req, res) => {
         }
         
         // Удаляем запись из БД
-        await dbClient.query('DELETE FROM users WHERE email = $1', [userEmail]);
+        await pgPool.query('DELETE FROM users WHERE email = $1', [userEmail]);
 
         // Уничтожаем сессию
         req.session.destroy((err) =>{
