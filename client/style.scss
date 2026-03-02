@@ -351,8 +351,9 @@ header{
 }
 .viaLog{
     margin-top: 15px;
-    display: none;
+    display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 .viaLog h4{
@@ -368,8 +369,12 @@ header{
     box-shadow: 0px 0px 5px gray;
     background-color: black;
 }
-.viaLog a img:active{
-    box-shadow: 0px 0px 10px var(--gold);
+.viaLog a img:hover{
+    box-shadow: 0px 0px 10px rgba(66, 133, 244, 0.6);
+}
+.viaLog a img:active {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 10px rgba(66, 133, 244, 0.6);
 }
 #sign_up{
    @include sign_in-up;
