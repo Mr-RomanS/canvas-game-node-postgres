@@ -81,10 +81,10 @@ SESSION_PASSWORD=your_secret_key
 
 ## Database Setup
 
-1. Install PostgreSQL locally.
+1. Install PostgreSQL.
 2. Create a new database.
-3. Update your `.env` file with correct database credentials.
-4. Make sure PostgreSQL server is running before starting the project.
+3. Run the SQL commands from `server/database.sql` to create the necessary tables (`users` and `session`).
+4. Update your `.env` file with your credentials.
 
 ---
 
