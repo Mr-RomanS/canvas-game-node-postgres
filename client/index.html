@@ -199,15 +199,15 @@
 
             <label data-i18n="OldPasswordLabel">Old Password</label>
             <p id="passwordMessage"></p>
-            <div class="password-field">
+            <div class="password-field" id="wrapperOldPass">
                 <input type="password" minlength="8" maxlength="20" id="oldPassPlayer">
-                <img src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-button" class="toggle-pass">
+                <img id="btnPassIconOld"  src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-button"  class="toggle-pass">
             </div>
 
             <label><span data-i18n="NewPasswordLabel1">New Password</span><br> <span data-i18n="NewPasswordLabel2">(8-20 alphanumeric characters)</span>  </label>
-            <div class="password-field">
+            <div class="password-field" id="wrapperNewPass">
                 <input type="password" minlength="8" maxlength="20" id="newPassPlayer">
-                <img src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-button" class="toggle-pass">
+                <img id="btnPassIconNew" src="images/menu_icons/eye-slash-solid-full.svg" alt="eye-slash-button" class="toggle-pass">
             </div>
 
                 <button type="submit" data-i18n="changeBtnPass">Change</button>

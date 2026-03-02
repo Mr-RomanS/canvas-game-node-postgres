@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const menuBtn = document.getElementById('btn_Menu');
 const sideMenu = document.getElementById('sideMenu');
+const lobbyMenu = document.getElementById('lobbyMenu');
+const lobbyPlayerAkk = document.getElementById('lobbyPlayerAkk');
 const btnX_Menu = document.getElementById('btnX_Menu');
 
 const langBtn = document.getElementById('langBtn');
@@ -57,13 +59,14 @@ const changePasswordForm = document.getElementById('changePasswordForm');
 const oldPassPlayer = document.getElementById('oldPassPlayer');
 const newPassPlayer = document.getElementById('newPassPlayer');
 const passwordMessage = document.getElementById('passwordMessage');
-const togglePassImages = document.querySelectorAll('.toggle-pass');
 
 const modalBody = document.getElementById('modalBody');
 const modalDeleteBtn = document.getElementById('modalDeleteBtn');
 const modalTitle = document.getElementById('modalTitle');
 
 
+
+let isAuthenticated = false;
 // Вызываем функцию проверки СРАЗУ при загрузке страницы
 const checkAuth = async () => {
     try {
@@ -84,11 +87,10 @@ const checkAuth = async () => {
             if (lobbyMenu && lobbyPlayerAkk) {
                 lobbyMenu.style.display = 'none';
                 lobbyPlayerAkk.style.display = 'block';
-                moveThemeCard(true); 
             }
         }
     } catch (err) {
-        console.log("Сессия не найдена. Пользователь не авторизован.");
+        console.log("Session not found. User is not authorized.");
     }
 };
 
@@ -125,7 +127,7 @@ function toggleMenu() {
   }
 }
 /* =========================
-   ФОРМЫ: Sign up / Sign in
+    ФОРМЫ: Sign up / Sign in
    ========================= */
 
 function showSignUp() {
@@ -315,35 +317,33 @@ if (themeGrid) {
 // -------отображения пароля в виде текст,смена картинки.
 function setupPasswordToggle(buttonId, wrapperId) {
   const btn = document.getElementById(buttonId);
-  if (!btn) return;
+  const wrap = document.getElementById(wrapperId);
+  if (!btn || !wrap) return;
 
   btn.addEventListener('click', (e) => {
     e.preventDefault();
-
-    const wrap = document.getElementById(wrapperId);
-    if (!wrap) return;
-
-    const input = wrap.querySelector('input[type="password"], input[type="text"]');
+    const input = wrap.querySelector('input');
     if (!input) return;
 
     const isHidden = input.type === 'password';
     input.type = isHidden ? 'text' : 'password';
 
-    const icon = btn.querySelector('img');
+    // Исправленная логика поиска иконки:
+    // Если сама кнопка это IMG — берем её. Если нет — ищем IMG внутри.
+    const icon = btn.tagName === 'IMG' ? btn : btn.querySelector('img');
+
     if (icon) {
-  icon.src = isHidden
-    ? 'images/menu_icons/eye-solid-full.svg'
-    : 'images/menu_icons/eye-slash-solid-full.svg';
-}
-
-
+      icon.src = isHidden
+        ? 'images/menu_icons/eye-solid-full.svg'
+        : 'images/menu_icons/eye-slash-solid-full.svg';
+    }
     input.focus();
   });
 }
 setupPasswordToggle('btnPassIconUp', 'iconPassUp');
 setupPasswordToggle('btnPassIconIn', 'iconPassIn');
-
-
+setupPasswordToggle('btnPassIconOld', 'wrapperOldPass');
+setupPasswordToggle('btnPassIconNew', 'wrapperNewPass');
 
 // ------Открытие и закрытие модального окна.
 function openModalWindow() {
@@ -399,7 +399,6 @@ avatarInput.addEventListener('change', async () => {
     }
 });
 //-------Сохраняем значение из ввода в PostgreSQL.-----
-let isAuthenticated = false;
 
 signUpForm.addEventListener('submit', async (event) =>{
 
@@ -571,18 +570,7 @@ changePasswordForm.addEventListener('submit', async(event) =>{
     passwordMessage.style.color = '#8B1E1E';
   }
 })
-togglePassImages.forEach(img => {
-    img.addEventListener('click', () => {
-        const input = img.previousElementSibling; // берём input рядом
-        if (input.type === 'password') {
-            input.type = 'text';
-            img.src = 'images/menu_icons/eye-solid-full.svg';
-        } else {
-            input.type = 'password';
-            img.src = 'images/menu_icons/eye-slash-solid-full.svg';
-        }
-    });
-});
+
 //-------Выходим из аккаунта.--------
 logoutButton.addEventListener('click', async () => {
     try {

@@ -27,6 +27,7 @@ app.use(session({
         secure: false, // ставь true только если у тебя HTTPS
         // secure: true,
         // sameSite: 'lax', //Отправляй эту куку, только если запрос идет именно с моего сайта,
+        // name: 'my-custom-session-name', //"имя ярлыка".
         maxAge: 24 * 60 * 60 * 1000 // кука будет жить 1 день
     }
 }));
@@ -217,7 +218,7 @@ const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir);
 }
-
+//---Создание имени картинки.
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir); // Используем абсолютный путь
@@ -246,10 +247,10 @@ const upload = multer({
     fileFilter: fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // Ограничение 5 МБ
 })
-//---Загрузка аватара в аккаунт
+// Делаем папку 'uploads' публичной, чтобы браузер мог загружать из неё картинки
 app.use('/uploads', express.static(uploadDir));
 
-
+//---Загрузка аватара в аккаунт
 app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
     try {
         if (!req.session.user){
@@ -303,7 +304,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         });
     }
 });
-
+//--Выход из аккаунта.
 app.post('/logout', (req, res) => {
     // Команда destroy полностью удаляет сессию из "блокнота" сервера
     req.session.destroy((err) => {
@@ -324,6 +325,7 @@ app.post('/logout', (req, res) => {
         );
     });
 });
+//--Удаление аккаунта.
 app.delete('/delete-account', async (req, res) => {
     // Если сессии нет, возвращаем 401 и поясняем причину
     if(!req.session.user){
@@ -374,6 +376,8 @@ app.delete('/delete-account', async (req, res) => {
         });
     }
 });
+
+//-----Министерство Чрезвычайных Ситуаций
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
