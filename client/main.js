@@ -101,6 +101,20 @@ const getTranslation = (key) => {
     const currentLang = localStorage.getItem('lang') || 'en';
     return translations[currentLang][key] || key;
 };
+
+const clearUIStatusMessages = () => {
+    // Очищаем сообщения об успехе/ошибках смены логина и пароля
+    if (newLoginMessage) newLoginMessage.textContent = '';
+    if (passwordMessage) passwordMessage.textContent = '';
+    
+    // Очищаем ошибки входа и регистрации
+    if (warningInCorrectPass) {
+        warningInCorrectPass.textContent = '';
+        warningInCorrectPass.style.display = 'none';
+    }
+    if (warningTextBlockSignUp) warningTextBlockSignUp.textContent = '';
+    if (signUpSuccessfullText) signUpSuccessfullText.textContent = '';
+};
 /* =========================
   МЕНЮ: открыть/закрыть
    ========================= */
@@ -114,7 +128,7 @@ function openMenu() {
 function closeMenu() {
   if (!sideMenu || !menuBtn) return;
   sideMenu.classList.remove('active');
-
+  clearUIStatusMessages();
   menuBtn.focus();
 }
 function toggleMenu() {
@@ -588,7 +602,8 @@ logoutButton.addEventListener('click', async () => {
             // Опционально: очищаем поля на экране аккаунта
             loginPlayer.textContent = '';
             emailPlayer.textContent = '';
-            warningInCorrectPass.textContent = getTranslation('respondingMessage');
+            
+            clearUIStatusMessages();
             closeMenu();
         } else {
           showModalMessage(getTranslation('ServerErrorToLogOut'));
