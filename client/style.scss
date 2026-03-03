@@ -255,7 +255,7 @@ header{
     transform: translateY( 2px);
 }
 #lobbyMenu{
-    display:block;
+    display:none;
     background-color: var(--color-bg-menu);
     border: 2px  solid var(--color-accent-hover);
     margin-top: 20px;
@@ -553,6 +553,57 @@ header{
   border-color: var(--color-green);
 }
 
+
+//- ---VERIFICATION BLOCK
+
+#verificationForm{
+    width: 100%;
+    height: auto;
+    display: flex; //flex         
+    flex-direction: column; 
+    align-items: center;   
+    justify-content: center;
+    gap: 15px;
+    background-color: var(--color-bg-menu);
+    border: 2px  solid var(--color-accent-hover);
+    margin-top: 20px;
+    border-radius: var(--radius-md);
+    padding: 10px;
+}
+#verificationForm>img{
+    width: 60%;
+    height: auto;
+}
+#verificationForm>p{
+    font-family: var(--art-normalText);
+}
+#verificationCode{
+    @include inputSize;
+    text-align: center; 
+    letter-spacing: 5px;
+}
+#btnVerify{
+    @include buttonSign;
+}
+#resendCode{
+    cursor: pointer; 
+    text-decoration: underline; 
+    font-size: 14px;
+    padding: 5px;
+    border-radius: var(--radius-sm);
+}
+#backToSignUp{
+    width: 50% !important;
+    background-color: gray !important;
+    color: white;
+    font-size: 12px !important;
+    @include buttonSign;
+}
+#btnVerify:active,
+#resendCode:active,
+#backToSignUp:active{
+    @include btnAktiv;
+}
 
 
 

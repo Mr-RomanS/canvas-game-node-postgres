@@ -40,10 +40,10 @@ app.use(session({
     saveUninitialized: false,
     rolling: true,
     cookie: { 
-        secure: false, // ставь true только если у тебя HTTPS
-        // secure: true,
+        secure: false,// true только если у тебя HTTPS
+        // secure: true, // true только если у тебя HTTPS
         // sameSite: 'lax', //Отправляй эту куку, только если запрос идет именно с моего сайта,
-        // name: 'my-custom-session-name', //"имя ярлыка".
+        // name: 'my-custom-session-name', //"имя Cookie ярлыка".
         maxAge: 24 * 60 * 60 * 1000, // кука будет жить 1 день
         httpOnly: true
     }
