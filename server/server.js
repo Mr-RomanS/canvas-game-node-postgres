@@ -10,6 +10,12 @@ const pgSession = require('connect-pg-simple')(session); // Подключаем
 
 
 const { sendVerificationCode } = require('./services/authService');
+const { createClient } = require('redis');
+const { use } = require('react');
+const redisClient = createClient({ url: process.env.REDIS_URL });
+
+redisClient.on('error', (err) => console.error('Redis Client Error', err));
+redisClient.connect().then(() => console.log('Connected to Redis in server.js'));
 // Загружает секретные данные (пароли, ключи) из файла .env в память сервера
 require('dotenv').config();
 // 2. Создаем экземпляр нашего приложения (сервера)
@@ -85,26 +91,35 @@ pgPool.connect()
         process.exit(1);// Остановить сервер, если базы нет
     });
 
-app.post('/register', async (req, res) =>{
+app.post('/register', async (req,res) => {
+    const {username, email, password} = req.body;
+
     try{
-        const { username,email,password} = req.body;
+        const userExists = await pgPool.query(
+            'SELECT * FROM users WHERE  email = $1 OR username = $2',
+            [email, username]
+        )
+        if(userExists.rows.length > 0){
+            return res.status(400).json({
+                error: 'USER_EXISTS',
+                message: 'Username or Email already taken'
+            });
+        }
         const hash = await bcrypt.hash(password, 10);
+        const userData = JSON.stringify({ username, email, password: hash});
+        await redisClient.set(`pending_user:${email}`, userData, {EX: 600})
 
-        const queryText = 'INSERT INTO users (username, email, password_hash) VALUES($1, $2, $3)';
-        await pgPool.query(queryText, [username, email, hash]);
+        await sendVerificationCode(email);
 
-        res.status(200).json({ 
-            success: true, 
-            message: 'User registered successfully' 
+        res.status(200).json({
+            success: true,
+            message: 'Code sent to your email',
         });
     }catch(err){
-        console.error('Registration error:', err);
-        res.status(500).json({ 
-            error: 'REGISTRATION_FAILED', 
-            message: 'Error saving user to database' 
-        });
+        console.log('Registration error (Step 1):', err);
+        res.status(500).json({ error: 'SERVER_ERROR' });
     }
-})
+});
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
