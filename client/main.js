@@ -272,10 +272,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   // закрыть формы входа/регистрации
   hideAuthForms();
-
   // закрыть popUp языка
   closeLang();
-
   // закрыть меню
   closeMenu();
 });
