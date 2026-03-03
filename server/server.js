@@ -38,6 +38,7 @@ app.use(session({
     secret: process.env.SESSION_PASSWORD, // любая длинная строка
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: { 
         secure: false, // ставь true только если у тебя HTTPS
         // secure: true,
