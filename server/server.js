@@ -12,6 +12,7 @@ const pgSession = require('connect-pg-simple')(session); // Подключаем
 const { sendVerificationCode } = require('./services/authService');
 const { createClient } = require('redis');
 const { use } = require('react');
+const { json } = require('stream/consumers');
 const redisClient = createClient({ url: process.env.REDIS_URL });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
@@ -117,6 +118,44 @@ app.post('/register', async (req,res) => {
         });
     }catch(err){
         console.log('Registration error (Step 1):', err);
+        res.status(500).json({ error: 'SERVER_ERROR' });
+    }
+});
+
+app.post('/verify-registration', async (req,res)=> {
+    const {email, code} = req.body;
+
+    try{
+        const saveCode = await redisClient.get(`verify:${email}`);
+
+        if(!saveCode || saveCode !== code){
+            return res.status(400).json({
+                error: 'INVALIDE_CODE',
+                message: 'Wrong or expired verification code'
+            });
+        }
+        const pendingUserData = await redisClient.get(`pending_user:${email}`);
+        if(!pendingUserData){
+            return res.status(400).json({
+                error: 'SESSION_EXPIRED',
+                message: 'Registration session expired. Please try again'
+            });
+        }
+        const { username, email: userEmail, password} = JSON.parse(pendingUserData);
+        const result = await pgPool.query(
+            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id',
+            [username,userEmail, password]
+        );
+        await redisClient.del(`verify:${email}`);
+        await redisClient.del(`pending_user:${email}`);
+
+        res.status(201).json({
+            success: true,
+            message: 'User successfully registred!',
+            userId: result.rows[0].id
+        });
+    }catch(err){
+        console.error('Verification error (Step 2):', err);
         res.status(500).json({ error: 'SERVER_ERROR' });
     }
 });
