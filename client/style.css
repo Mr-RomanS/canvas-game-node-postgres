@@ -234,7 +234,7 @@ header {
 }
 
 #lobbyMenu {
-  display: none;
+  display: block;
   background-color: var(--color-bg-menu);
   border: 2px solid var(--color-accent-hover);
   margin-top: 20px;
@@ -639,7 +639,7 @@ header {
 #verificationForm {
   width: 100%;
   height: auto;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
