@@ -458,7 +458,6 @@ signInForm.addEventListener('submit', async (event) => {
             body: JSON.stringify({ email, password }),
         });
 
-        // ОЧИЩАЕМ ПОЛЯ ТОЛЬКО ЗДЕСЬ (при успехе)
             logInEmailInput.value = '';
             logInPasswordInput.value = '';
 

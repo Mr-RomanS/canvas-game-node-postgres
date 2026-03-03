@@ -32,7 +32,8 @@ app.use(express.json());
 app.use(session({
     store: new pgSession({
         pool: pgPool,                // Твой пул подключений к БД
-        tableName: 'session'         // Имя таблицы, которую мы создали выше
+        tableName: 'session',        // Имя таблицы, которую мы создали выше
+        pruneSessionInterval: 60 * 15, // 15min - Как часто проверять и удалять из базы данных "протухшие" (старые) сессии
     }),
     secret: process.env.SESSION_PASSWORD, // любая длинная строка
     resave: false,
