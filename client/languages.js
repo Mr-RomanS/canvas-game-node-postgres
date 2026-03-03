@@ -69,6 +69,10 @@ export const translations = {
     FailedConnectServer:'Failed to connect to the server',
     avatar_upload_error:'The file is too large! Max 5MB',
 
+    EnterCodeText: "Enter the 6-digit code sent to your email",
+    btnVerify: "Verify",
+    ResendCodeText: "Resend code",
+    BackToSignUpBtn: "Wrong email? Go back"
   },
 
   ua: {
@@ -141,6 +145,10 @@ export const translations = {
     FailedConnectServer:'Не вдалося підключитися до сервера',
     avatar_upload_error:'Файл занадто великий! Максимум 5 МБ',
     
+    EnterCodeText: "Введіть 6-значний код, надісланий на вашу електронну пошту",
+    btnVerify: "Підтвердити",
+    ResendCodeText: "Надіслати код повторно",
+    BackToSignUpBtn: "Неправильна електронна пошта? Повернутися назад"
   },
 
   de: {
@@ -213,5 +221,9 @@ export const translations = {
     FailedConnectServer:'Verbindung zum Server fehlgeschlagen',
     avatar_upload_error:'Die Datei ist zu groß! Maximal 5 MB',
     
+    EnterCodeText: "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail-Adresse gesendet wurde",
+    btnVerify: "Bestätigen",
+    ResendCodeText: "Code erneut senden",
+    BackToSignUpBtn: "Falsche E-Mail? Zurückgehen"
   }
 }
