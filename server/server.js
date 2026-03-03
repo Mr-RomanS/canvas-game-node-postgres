@@ -8,6 +8,8 @@ const fs = require('fs');// fs (File System) — позволяет сервер
 const session = require('express-session');//позволяет серверу "узнавать" пользователя между запросами, создавая уникальную сессию (временную память).
 const pgSession = require('connect-pg-simple')(session); // Подключаем хранилище сессий.
 
+
+const { sendVerificationCode } = require('./services/authService');
 // Загружает секретные данные (пароли, ключи) из файла .env в память сервера
 require('dotenv').config();
 // 2. Создаем экземпляр нашего приложения (сервера)
