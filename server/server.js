@@ -9,16 +9,15 @@ const session = require('express-session');//позволяет серверу "
 const pgSession = require('connect-pg-simple')(session); // Подключаем хранилище сессий.
 
 
-const { sendVerificationCode } = require('./services/authService');
+require('dotenv').config();// Загружает секретные данные (пароли, ключи) из файла .env в память сервера
+
 const { createClient } = require('redis');
-const { use } = require('react');
-const { json } = require('stream/consumers');
+const { sendVerificationCode } = require('./services/authService');
+
 const redisClient = createClient({ url: process.env.REDIS_URL });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 redisClient.connect().then(() => console.log('Connected to Redis in server.js'));
-// Загружает секретные данные (пароли, ключи) из файла .env в память сервера
-require('dotenv').config();
 // 2. Создаем экземпляр нашего приложения (сервера)
 const app = express();
 // 3. Указываем серверу порт (на каком "канале" он будет вещать)
@@ -143,7 +142,7 @@ app.post('/verify-registration', async (req,res)=> {
         }
         const { username, email: userEmail, password} = JSON.parse(pendingUserData);
         const result = await pgPool.query(
-            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id',
+            'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id',
             [username,userEmail, password]
         );
         await redisClient.del(`verify:${email}`);

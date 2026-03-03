@@ -38,6 +38,12 @@ const loginInputSignUpForm = document.getElementById('loginInputSignUpForm');
 const emailInputSignUpForm = document.getElementById('emailInputSignUpForm');
 const passwordInputSignUpForm = document.getElementById('passwordInputSignUpForm');
 
+const verificationForm = document.getElementById('verificationForm');
+const verificationCode = document.getElementById('verificationCode');
+const btnVerify = document.getElementById('btnVerify');
+const resendCode = document.getElementById('resendCode');
+const backToSignUp = document.getElementById('backToSignUp');
+
 const loginPlayer = document.getElementById('loginPlayer');
 const emailPlayer = document.getElementById('emailPlayer');
 const warningInCorrectPass = document.getElementById('warningInCorrectPass');
@@ -412,46 +418,68 @@ avatarInput.addEventListener('change', async () => {
 });
 //-------Сохраняем значение из ввода в PostgreSQL.-----
 
-signUpForm.addEventListener('submit', async (event) =>{
+let tempEmail = ""; // Сюда сохраним почту, чтобы она не потерялась после очистки формы
 
-  event.preventDefault();
+signUpForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const username = loginInputSignUpForm.value;
+    const email = emailInputSignUpForm.value;
+    const password = passwordInputSignUpForm.value;
 
-  const username = loginInputSignUpForm.value;
-  const email = emailInputSignUpForm.value;
-  const password = passwordInputSignUpForm.value;
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password }),
+        });
 
-  try{
-    const response = await fetch('/register', {
-      method:'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username, email, password}),
-    })
+        const data = await response.json(); // Добавили, чтобы читать ошибки от сервера
 
-    if(response.ok){
-      const message = await response.text();
-  
-      loginPlayer.textContent = username;
-      emailPlayer.textContent = email;
+        if (response.ok) {
+            tempEmail = email; // ЗАПОМИНАЕМ email перед тем как очистить форму
+            
+            loginInputSignUpForm.value = '';
+            emailInputSignUpForm.value = '';
+            passwordInputSignUpForm.value = '';
 
-      loginInputSignUpForm.value = '';
-      emailInputSignUpForm.value = '';
-      passwordInputSignUpForm.value = '';
+            verificationForm.style.display = 'flex';
+            lobbyMenu.style.display = 'none';
 
-      showSignIn();
-      signUpSuccessfullText.style.display = 'block';
-      signUpSuccessfullText.textContent = getTranslation('successfullReg')
-      warningInCorrectPass.style.display = 'none';
-    }else{
-      warningTextBlockSignUp.textContent  = getTranslation('FailedToWrite');
-      warningTextBlockSignUp.style.color = 'red';
-    }
-  }catch(err){
+            console.log('Код отправлен на:', tempEmail);
+        } else {
+            alert(data.message || 'Ошибка');
+        }
+    } catch (err) {
         console.error("Network error:", err);
-        openModalWindow();
-        modalBody.textContent = getTranslation('FailedConnectServer');
-  }
+        // Твоя функция открытия модалки
+    }
+});
 
-})
+verificationForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = verificationCode.value;
+
+    try {
+        const response = await fetch('/verify-registration', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: tempEmail, code }) // Используем сохраненный tempEmail
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Успех!');
+            location.reload(); 
+        } else {
+            alert(data.message || 'Неверный код');
+        }
+    } catch (err) {
+        console.error('Ошибка верификации:', err);
+    }
+});
+
+
 //------- Форма  входа в аккаунт.----
 signInForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -602,7 +630,7 @@ logoutButton.addEventListener('click', async () => {
             // Опционально: очищаем поля на экране аккаунта
             loginPlayer.textContent = '';
             emailPlayer.textContent = '';
-            
+
             clearUIStatusMessages();
             closeMenu();
         } else {
