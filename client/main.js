@@ -476,8 +476,7 @@ verificationForm.addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            alert('Успех!');
-            location.reload(); 
+            location.reload();
         } else {
             alert(data.message || 'Неверный код');
         }
