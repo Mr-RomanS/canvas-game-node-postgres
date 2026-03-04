@@ -170,7 +170,11 @@
     <form id="verificationForm">
         <img src="images/game_icons/optin-monster-brands-solid-full.svg" alt="Monster Icon">
         
-        <p data-i18n="EnterCodeText">Enter the 6-digit code sent to your email</p>
+        <div id="verificationDivText">
+            <span id="verificationTextSpan" data-i18n="codeIncorrectText">The code is incorrect.</span>
+            <br> 
+            <p data-i18n="EnterCodeText">Enter the 6-digit code sent to your email</p>
+        </div>
         
         <input 
             id="verificationCode" 
@@ -178,8 +182,7 @@
             maxlength="6" 
             placeholder="000000"
             required
-            pattern="\d{6}" 
-            title="Please enter 6 digits"
+            pattern="\d{6}"
         >
         <button id="btnVerify" type="submit" data-i18n="btnVerify">Verify</button>
         <p id="resendCode" data-i18n="ResendCodeText">Resend code</p>

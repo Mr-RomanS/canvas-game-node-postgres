@@ -639,7 +639,7 @@ header {
 #verificationForm {
   width: 100%;
   height: auto;
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -656,7 +656,17 @@ header {
   height: auto;
 }
 
-#verificationForm > p {
+#verificationDivText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: var(--art-normalText);
+  align-items: center;
+}
+
+#verificationTextSpan {
+  display: none;
+  color: var(--danger);
   font-family: var(--art-normalText);
 }
 
@@ -691,6 +701,7 @@ header {
   font-size: 14px;
   padding: 5px;
   border-radius: var(--radius-sm);
+  font-family: var(--art-bigText);
 }
 
 #backToSignUp {

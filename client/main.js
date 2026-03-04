@@ -40,6 +40,7 @@ const passwordInputSignUpForm = document.getElementById('passwordInputSignUpForm
 
 const verificationForm = document.getElementById('verificationForm');
 const verificationCode = document.getElementById('verificationCode');
+const verificationTextSpan = document.getElementById('verificationTextSpan');
 const btnVerify = document.getElementById('btnVerify');
 const resendCode = document.getElementById('resendCode');
 const backToSignUp = document.getElementById('backToSignUp');
@@ -464,6 +465,8 @@ signUpForm.addEventListener('submit', async (event) => {
 
 verificationForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    verificationTextSpan.style.display = 'none';
     const code = verificationCode.value;
 
     try {
@@ -478,7 +481,7 @@ verificationForm.addEventListener('submit', async (e) => {
         if (response.ok) {
             location.reload();
         } else {
-            alert(data.message || 'Неверный код');
+            verificationTextSpan.style.display = 'block';
         }
     } catch (err) {
         console.error('Ошибка верификации:', err);

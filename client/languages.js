@@ -76,6 +76,7 @@ export const translations = {
     UserAlreadyExists:'Login or Email already taken',
     GeneralError:'Something went wrong',
     NetworkError:'Check your internet connection.',
+    codeIncorrectText:'The code is incorrect.',
 
   },
 
@@ -156,7 +157,8 @@ export const translations = {
     UserAlreadyExists: 'Логін або електронна пошта вже зайняті',
     GeneralError: 'Щось пішло не так',
     NetworkError:'Перевірте підключення до інтернету.',
-
+    codeIncorrectText:'Код невірний.',
+    
   },
 
   de: {
@@ -236,6 +238,7 @@ export const translations = {
     UserAlreadyExists: 'Login oder E-Mail ist bereits vergeben',
     GeneralError: 'Etwas ist schiefgelaufen',
     NetworkError:'Überprüfen Sie Ihre Internetverbindung.',
-
+    codeIncorrectText:'Der Code ist falsch.',
+    
   }
 }
