@@ -445,13 +445,20 @@ signUpForm.addEventListener('submit', async (event) => {
             verificationForm.style.display = 'flex';
             lobbyMenu.style.display = 'none';
 
-            console.log('Код отправлен на:', tempEmail);
         } else {
-            alert(data.message || 'Ошибка');
-        }
+          warningTextBlockSignUp.style.display = 'block';
+          warningTextBlockSignUp.style.color = 'red';
+
+          // Проверяем тип ошибки, который прислал сервер
+          if (data.error === 'USER_EXISTS') {
+              warningTextBlockSignUp.textContent = getTranslation('UserAlreadyExists');
+          } else {
+                warningTextBlockSignUp.textContent = getTranslation('GeneralError');
+            }
+          }
     } catch (err) {
         console.error("Network error:", err);
-        // Твоя функция открытия модалки
+        warningTextBlockSignUp.textContent = getTranslation('NetworkError');
     }
 });
 

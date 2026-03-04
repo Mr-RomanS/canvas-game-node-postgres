@@ -72,7 +72,11 @@ export const translations = {
     EnterCodeText: "Enter the 6-digit code sent to your email",
     btnVerify: "Verify",
     ResendCodeText: "Resend code",
-    BackToSignUpBtn: "Wrong email? Go back"
+    BackToSignUpBtn: "Wrong email? Go back",
+    UserAlreadyExists:'Login or Email already taken',
+    GeneralError:'Something went wrong',
+    NetworkError:'Check your internet connection.',
+
   },
 
   ua: {
@@ -148,7 +152,11 @@ export const translations = {
     EnterCodeText: "Введіть 6-значний код, надісланий на вашу електронну пошту",
     btnVerify: "Підтвердити",
     ResendCodeText: "Надіслати код повторно",
-    BackToSignUpBtn: "Неправильна електронна пошта? Повернутися назад"
+    BackToSignUpBtn: "Неправильна електронна пошта? Повернутися назад",
+    UserAlreadyExists: 'Логін або електронна пошта вже зайняті',
+    GeneralError: 'Щось пішло не так',
+    NetworkError:'Перевірте підключення до інтернету.',
+
   },
 
   de: {
@@ -224,6 +232,10 @@ export const translations = {
     EnterCodeText: "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail-Adresse gesendet wurde",
     btnVerify: "Bestätigen",
     ResendCodeText: "Code erneut senden",
-    BackToSignUpBtn: "Falsche E-Mail? Zurückgehen"
+    BackToSignUpBtn: "Falsche E-Mail? Zurückgehen",
+    UserAlreadyExists: 'Login oder E-Mail ist bereits vergeben',
+    GeneralError: 'Etwas ist schiefgelaufen',
+    NetworkError:'Überprüfen Sie Ihre Internetverbindung.',
+
   }
 }
