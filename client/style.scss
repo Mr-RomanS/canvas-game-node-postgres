@@ -382,6 +382,9 @@ header{
 #sign_up h3{
    @include sign_inUp_h3;
 }
+#warningTextBlockSignUp{
+    color: var(--danger);
+}
 #sign_up h4{
     font-size: 12px;
     font-family: var(--art-normalText);
@@ -586,7 +589,6 @@ header{
     color: var(--danger);
     font-family: var(--art-normalText);
 }
-
 #verificationCode{
     @include inputSize;
     text-align: center; 
@@ -605,6 +607,8 @@ header{
     text-decoration: underline; 
     font-size: 14px;
     padding: 5px;
+    border: none;
+    background-color: transparent;
     border-radius: var(--radius-sm);
     font-family: var(--art-bigText);
 }

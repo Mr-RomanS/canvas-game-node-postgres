@@ -167,6 +167,29 @@ app.post('/verify-registration', async (req,res)=> {
     }
 });
 
+app.post('/resend-code', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const pendingUser = await redisClient.get(`pending_user:${email}`);
+        if (!pendingUser) {
+            return res.status(400).json({ 
+                error: 'SESSION_EXPIRED', 
+                message: 'Registration expired. Please start over.' 
+            });
+        }
+
+        // Используем твою функцию из authService, которая сама создаст код и отправит письмо
+        await sendVerificationCode(email);
+
+        res.json({ success: true, message: 'New code sent!' });
+
+    } catch (err) {
+        console.error('Resend error:', err);
+        res.status(500).json({ error: 'SERVER_ERROR' });
+    }
+});
+
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 

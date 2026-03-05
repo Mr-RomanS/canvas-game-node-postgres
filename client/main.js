@@ -43,7 +43,6 @@ const verificationForm = document.getElementById('verificationForm');
 const verificationCode = document.getElementById('verificationCode');
 const verificationTextSpan = document.getElementById('verificationTextSpan');
 const display = document.getElementById('countdown');
-const btnVerify = document.getElementById('btnVerify');
 const resendCode = document.getElementById('resendCode');
 const backToSignUp = document.getElementById('backToSignUp');
 
@@ -422,7 +421,6 @@ avatarInput.addEventListener('change', async () => {
 //-------Сохраняем значение из ввода в PostgreSQL.-----
 
 let tempEmail = ""; // Сюда сохраним почту, чтобы она не потерялась после очистки формы
-
 signUpForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const username = loginInputSignUpForm.value;
@@ -448,8 +446,6 @@ signUpForm.addEventListener('submit', async (event) => {
 
         } else {
           warningTextBlockSignUp.style.display = 'block';
-          warningTextBlockSignUp.style.color = 'red';
-
           // Проверяем тип ошибки, который прислал сервер
           if (data.error === 'USER_EXISTS') {
               warningTextBlockSignUp.textContent = getTranslation('UserAlreadyExists');
@@ -464,16 +460,14 @@ signUpForm.addEventListener('submit', async (event) => {
 });
 
 let countdownInterval; // Глобальная переменная для управления таймером
-
 function startRegistrationTimer(durationInSeconds) {
     const timerContainer = document.getElementById('timerDisplay');
-    const resendBtn = document.getElementById('resendCode');
 
     // Сброс предыдущего таймера, если он был
     clearInterval(countdownInterval);
     timerContainer.style.display = 'block';
-    resendBtn.style.pointerEvents = 'none'; // Отключаем кнопку переотправки, пока идет таймер
-    resendBtn.style.opacity = '0.5';
+    resendCode.style.pointerEvents = 'none'; // Отключаем кнопку переотправки, пока идет таймер
+    resendCode.style.opacity = '0.5';
 
     let timer = durationInSeconds;
     
@@ -491,9 +485,9 @@ function startRegistrationTimer(durationInSeconds) {
             clearInterval(countdownInterval);
             display.textContent = "00:00";
             // Когда время вышло, разрешаем переотправку
-            resendBtn.style.pointerEvents = 'auto';
-            resendBtn.style.opacity = '1';
-            resendBtn.style.cursor = 'pointer';
+            resendCode.style.pointerEvents = 'auto';
+            resendCode.style.opacity = '1';
+            resendCode.style.cursor = 'pointer';
         }
     }, 1000);
 }
@@ -533,6 +527,31 @@ backToSignUp.addEventListener('click', () => {
     verificationTextSpan.style.display = 'none';
     
     display.textContent = "10:00";
+});
+
+resendCode.addEventListener('click', async () => {
+    // Если кнопка заблокирована таймером (opacity 0.5), ничего не делаем
+    if (resendCode.style.pointerEvents === 'none') return;
+
+    try {
+        const response = await fetch('/resend-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: tempEmail })
+        });
+
+        if (response.ok) {
+            // Если код успешно отправлен, снова запускаем таймер на 10 минут
+            startRegistrationTimer(600);
+            // Скрываем старые ошибки, если они были
+            verificationTextSpan.style.display = 'none';
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Error resending code');
+        }
+    } catch (err) {
+        console.error('Resend fetch error:', err);
+    }
 });
 
 //------- Форма  входа в аккаунт.----
