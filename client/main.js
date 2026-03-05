@@ -38,9 +38,11 @@ const loginInputSignUpForm = document.getElementById('loginInputSignUpForm');
 const emailInputSignUpForm = document.getElementById('emailInputSignUpForm');
 const passwordInputSignUpForm = document.getElementById('passwordInputSignUpForm');
 
+const verificationBlock = document.getElementById('verificationBlock');
 const verificationForm = document.getElementById('verificationForm');
 const verificationCode = document.getElementById('verificationCode');
 const verificationTextSpan = document.getElementById('verificationTextSpan');
+const display = document.getElementById('countdown');
 const btnVerify = document.getElementById('btnVerify');
 const resendCode = document.getElementById('resendCode');
 const backToSignUp = document.getElementById('backToSignUp');
@@ -441,11 +443,7 @@ signUpForm.addEventListener('submit', async (event) => {
             
             startRegistrationTimer(600);
 
-            loginInputSignUpForm.value = '';
-            emailInputSignUpForm.value = '';
-            passwordInputSignUpForm.value = '';
-
-            verificationForm.style.display = 'flex';
+            verificationBlock.style.display = 'block';
             lobbyMenu.style.display = 'none';
 
         } else {
@@ -468,7 +466,6 @@ signUpForm.addEventListener('submit', async (event) => {
 let countdownInterval; // Глобальная переменная для управления таймером
 
 function startRegistrationTimer(durationInSeconds) {
-    const display = document.getElementById('countdown');
     const timerContainer = document.getElementById('timerDisplay');
     const resendBtn = document.getElementById('resendCode');
 
@@ -503,7 +500,6 @@ function startRegistrationTimer(durationInSeconds) {
 
 verificationForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     verificationTextSpan.style.display = 'none';
     const code = verificationCode.value;
 
@@ -527,8 +523,16 @@ verificationForm.addEventListener('submit', async (e) => {
 });
 
 backToSignUp.addEventListener('click', () => {
-    clearInterval(countdownInterval); // Останавливаем счетчик
-    // ... остальная логика возврата ...
+    clearInterval(countdownInterval); 
+
+    verificationBlock.style.display = 'none';
+    lobbyMenu.style.display = 'block';
+    showSignUp();
+
+    verificationCode.value = '';
+    verificationTextSpan.style.display = 'none';
+    
+    display.textContent = "10:00";
 });
 
 //------- Форма  входа в аккаунт.----
