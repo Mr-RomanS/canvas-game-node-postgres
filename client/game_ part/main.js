@@ -205,7 +205,7 @@ const playerSadImg = new Image();
 playerSadImg.src = "./image/face-grin.svg";
 
 const playerNormImg = new Image();
-playerNormImg.src = "./hero2.png";
+playerNormImg.src = "./image/face-smile.svg";
 
 // флаг "хотя бы нормальная картинка загрузилась"
 let playerImgLoaded = false;

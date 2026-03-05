@@ -439,6 +439,8 @@ signUpForm.addEventListener('submit', async (event) => {
         if (response.ok) {
             tempEmail = email; // ЗАПОМИНАЕМ email перед тем как очистить форму
             
+            startRegistrationTimer(600);
+
             loginInputSignUpForm.value = '';
             emailInputSignUpForm.value = '';
             passwordInputSignUpForm.value = '';
@@ -463,6 +465,42 @@ signUpForm.addEventListener('submit', async (event) => {
     }
 });
 
+let countdownInterval; // Глобальная переменная для управления таймером
+
+function startRegistrationTimer(durationInSeconds) {
+    const display = document.getElementById('countdown');
+    const timerContainer = document.getElementById('timerDisplay');
+    const resendBtn = document.getElementById('resendCode');
+
+    // Сброс предыдущего таймера, если он был
+    clearInterval(countdownInterval);
+    timerContainer.style.display = 'block';
+    resendBtn.style.pointerEvents = 'none'; // Отключаем кнопку переотправки, пока идет таймер
+    resendBtn.style.opacity = '0.5';
+
+    let timer = durationInSeconds;
+    
+    countdownInterval = setInterval(() => {
+        let minutes = Math.floor(timer / 60);
+        let seconds = timer % 60;
+
+        // Форматируем 0:9 в 0:09
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            clearInterval(countdownInterval);
+            display.textContent = "00:00";
+            // Когда время вышло, разрешаем переотправку
+            resendBtn.style.pointerEvents = 'auto';
+            resendBtn.style.opacity = '1';
+            resendBtn.style.cursor = 'pointer';
+        }
+    }, 1000);
+}
+
 verificationForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -484,10 +522,14 @@ verificationForm.addEventListener('submit', async (e) => {
             verificationTextSpan.style.display = 'block';
         }
     } catch (err) {
-        console.error('Ошибка верификации:', err);
+        console.error('Verification error:', err);
     }
 });
 
+backToSignUp.addEventListener('click', () => {
+    clearInterval(countdownInterval); // Останавливаем счетчик
+    // ... остальная логика возврата ...
+});
 
 //------- Форма  входа в аккаунт.----
 signInForm.addEventListener('submit', async (event) => {

@@ -77,7 +77,8 @@ export const translations = {
     GeneralError:'Something went wrong',
     NetworkError:'Check your internet connection.',
     codeIncorrectText:'The code is incorrect.',
-
+    timerLeadText:'Code expires in:',
+    
   },
 
   ua: {
@@ -158,6 +159,8 @@ export const translations = {
     GeneralError: 'Щось пішло не так',
     NetworkError:'Перевірте підключення до інтернету.',
     codeIncorrectText:'Код невірний.',
+    timerLeadText:'Термін дії коду закінчується через:',
+
     
   },
 
@@ -239,6 +242,7 @@ export const translations = {
     GeneralError: 'Etwas ist schiefgelaufen',
     NetworkError:'Überprüfen Sie Ihre Internetverbindung.',
     codeIncorrectText:'Der Code ist falsch.',
+    timerLeadText:'Code läuft ab in:',
     
   }
 }

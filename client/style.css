@@ -639,7 +639,7 @@ header {
 #verificationForm {
   width: 100%;
   height: auto;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -693,6 +693,12 @@ header {
   border-radius: var(--radius-md);
   background-color: var(--color-green);
   transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+#timerDisplay {
+  display: block;
+  color: gray;
+  font-family: var(--art-bigText);
 }
 
 #resendCode {

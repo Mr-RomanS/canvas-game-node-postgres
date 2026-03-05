@@ -559,7 +559,7 @@ header{
 #verificationForm{
     width: 100%;
     height: auto;
-    display: flex; //flex         
+    display: none; //flex         
     flex-direction: column; 
     align-items: center;   
     justify-content: center;
@@ -594,6 +594,11 @@ header{
 }
 #btnVerify{
     @include buttonSign;
+}
+#timerDisplay{
+    display:block; 
+    color: gray;
+    font-family: var(--art-bigText);
 }
 #resendCode{
     cursor: pointer; 
