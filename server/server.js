@@ -107,7 +107,7 @@ app.post('/register', async (req,res) => {
         }
         const hash = await bcrypt.hash(password, 10);
         const userData = JSON.stringify({ username, email, password: hash});
-        await redisClient.set(`pending_user:${email}`, userData, {EX: 600})
+        await redisClient.set(`pending_user:${email}`, userData, {EX: 900})
 
         await sendVerificationCode(email);
 
@@ -169,9 +169,9 @@ app.post('/verify-registration', async (req,res)=> {
 
 app.post('/resend-code', async (req, res) => {
     const { email } = req.body;
-
     try {
         const pendingUser = await redisClient.get(`pending_user:${email}`);
+        
         if (!pendingUser) {
             return res.status(400).json({ 
                 error: 'SESSION_EXPIRED', 
@@ -179,16 +179,20 @@ app.post('/resend-code', async (req, res) => {
             });
         }
 
-        // Используем твою функцию из authService, которая сама создаст код и отправит письмо
-        await sendVerificationCode(email);
+        // 1. Отправляем новый код (это создаст новый код в Redis на 5 минут)
+        await sendVerificationCode(email); 
+
+        // 2. ВОТ ОНО: Продлеваем жизнь данных пользователя в Redis ещё на 5 минут (300 сек)
+        // Теперь счетчик сбросится обратно на 5 минут
+        await redisClient.expire(`pending_user:${email}`, 300);
 
         res.json({ success: true, message: 'New code sent!' });
-
     } catch (err) {
         console.error('Resend error:', err);
-        res.status(500).json({ error: 'SERVER_ERROR' });
+        res.status(500).json({ error: 'SERVER_ERROR', message: 'Internal server error' });
     }
 });
+
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;

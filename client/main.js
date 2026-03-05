@@ -439,7 +439,7 @@ signUpForm.addEventListener('submit', async (event) => {
         if (response.ok) {
             tempEmail = email; // ЗАПОМИНАЕМ email перед тем как очистить форму
             
-            startRegistrationTimer(600);
+            startRegistrationTimer(300);
 
             verificationBlock.style.display = 'block';
             lobbyMenu.style.display = 'none';
@@ -526,11 +526,10 @@ backToSignUp.addEventListener('click', () => {
     verificationCode.value = '';
     verificationTextSpan.style.display = 'none';
     
-    display.textContent = "10:00";
+    display.textContent = "5:00";
 });
 
 resendCode.addEventListener('click', async () => {
-    // Если кнопка заблокирована таймером (opacity 0.5), ничего не делаем
     if (resendCode.style.pointerEvents === 'none') return;
 
     try {
@@ -541,13 +540,14 @@ resendCode.addEventListener('click', async () => {
         });
 
         if (response.ok) {
-            // Если код успешно отправлен, снова запускаем таймер на 10 минут
-            startRegistrationTimer(600);
+            // Если код успешно отправлен, снова запускаем таймер на 5 минут
+            startRegistrationTimer(300);
             // Скрываем старые ошибки, если они были
             verificationTextSpan.style.display = 'none';
         } else {
-            const data = await response.json();
-            alert(data.message || 'Error resending code');
+            console.error('Network error during resend:', err);
+            verificationTextSpan.style.display = 'block';
+            verificationTextSpan.textContent = getTranslation('NetworkError');
         }
     } catch (err) {
         console.error('Resend fetch error:', err);

@@ -1,4 +1,4 @@
-const { createClient, REDISEARCH_LANGUAGE } = require('redis');
+const { createClient } = require('redis');
 const nodemailer = require('nodemailer');
 
 const redisClient = createClient({ url: process.env.REDIS_URL });
@@ -16,14 +16,14 @@ const transporter = nodemailer.createTransport({
 async function sendVerificationCode(email){
     const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await redisClient.set(`verify:${email}`, code , {EX: 600});//код удалится сам через 10 минут
+    await redisClient.set(`verify:${email}`, code , {EX: 300});//код удалится сам через 5 минут
 
     const mailOptions = {
-        from: `"My Game" <${process.env.EMAIL_USER}`,
+        from: `"My Game" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: 'Your Verification Code',
-        text: `Your code is: ${code}`,
-        html: `<h1>Code: ${code}</h1>`
+        text: `Your code is: ${code}. It is valid for 5 minutes.`,
+        html: `<h1>Code: ${code}</h1><p>Valid for 5 minutes.</p>`
     };
     await transporter.sendMail(mailOptions);
     return true;
