@@ -753,7 +753,7 @@ header{
   transition: opacity 0.15s ease;
 }
 #avatarLabel:hover #avatarHint{
-  opacity: 1;
+    opacity: 1;
 
 }
 .namePlayer p {
@@ -861,9 +861,8 @@ header{
 }
 
 
-
-
 //--------- Lobby Screen ----------
+
 #lobbyScreen{
   position: relative;
   max-width: var(--content-max) ;
@@ -936,12 +935,11 @@ header{
     border-radius: var(--radius-lg);
     box-shadow: 0 0 10px lightslategray;
 }
-
 #countersBox{
     width: 600px;
     height: auto;
     margin: auto;
-    background-color: var(--bg-light);
+    background-color: var(--bg-dark);
     border-radius: var(--radius-lg);
     display: none;
     justify-content: space-between;
@@ -952,20 +950,10 @@ header{
 }
 .counter{
     font-size: 20px;
+    color: var(--text-light);
     font-family: var(--art-grossText);
+    display: flex;
 }
-.fa-heart{
-    color: #8B1E1E;
-}
-.fa-sack-dollar{
-   color: var(--color-green);
-}
-.fa-key{
-    color: var(--gold);
-}
-.fa-scroll{
-    color: beige;
-}
-.fa-stopwatch{
-    color: gray;
+.counter>img{
+    width: 20px;
 }
