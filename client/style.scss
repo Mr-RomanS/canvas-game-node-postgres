@@ -223,7 +223,7 @@ header{
     @include btnAktiv;
 }
 
-/* Само меню */
+/* The menu itself */
 #sideMenu{
     width:400px;
     height: 100vh;
@@ -322,8 +322,8 @@ header{
 }
 #SignUpSuccessfullText{
     display: none;
-  font-family: var(--art-bigText);
-  color: var(--color-green);
+    font-family: var(--art-bigText);
+    color: var(--color-green);
 }
 #sign_in h3{
     @include sign_inUp_h3;
@@ -377,10 +377,10 @@ header{
     box-shadow: 0px 0px 10px rgba(66, 133, 244, 0.6);
 }
 #sign_up{
-   @include sign_in-up;
+    @include sign_in-up;
 }
 #sign_up h3{
-   @include sign_inUp_h3;
+    @include sign_inUp_h3;
 }
 #warningTextBlockSignUp{
     color: var(--danger);
@@ -403,13 +403,13 @@ header{
 }
 #iconPassIn,
 #iconPassUp{
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 #iconPassIn input,
 #iconPassUp input{
-  width: 100%;
-  padding-right: 44px;
+    width: 100%;
+    padding-right: 44px;
 }
 #btnPassIconIn,
 #btnPassIconUp{
@@ -532,7 +532,7 @@ header{
 }
 #themeGrid{
   display: flex;
- justify-content: space-around;
+  justify-content: space-around;
   gap: 10px;
   padding: 5px;
 }
@@ -659,17 +659,17 @@ header{
     font-family: var(--art-bigText);
     font-size: 40px;
     margin-bottom: 15px;
-    flex-shrink: 0; //Заголовок не должен сжиматься
+    flex-shrink: 0; // The header should not shrink
 }
 #modalBody {
     display: block;
     font-family: var(--art-normalText);
     text-align: left; 
-    overflow-y: auto; // ВКЛЮЧАЕМ СКРОЛЛ
-    padding-right: 10px; // Место для полосы прокрутки
+    overflow-y: auto; // ENABLE SCROLLING
+    padding-right: 10px; // Space for the scrollbar
     margin-bottom: 15px;
     
-    //Стилизация скроллбара 
+// Scrollbar styling
     &::-webkit-scrollbar {
         width: 6px;
     }
@@ -854,7 +854,7 @@ header{
     width: 50% !important;
     background-color: #000 !important;
     color: white;
-     @include buttonSign;
+    @include buttonSign;
 }
 #bthDelete:active{
   color: var(--danger);
@@ -870,11 +870,11 @@ header{
   display: block;
   margin: auto;
   border-radius: var(--radius-lg);
-  background-size: cover;      /* аналог object-fit: cover */
-  background-position: center; /* центр */
+  background-size: cover;      /* Alternative object-fit: cover */
+  background-position: center; /* center */
   background-repeat: no-repeat;
 
-  overflow: hidden; /* Обрезает всё, что выходит за границы */
+  overflow: hidden; /* Cuts off everything that exceeds the boundaries (Clipping) */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -916,11 +916,11 @@ header{
   width: auto;
   height: auto;
   
-  /* Магия здесь: */
-  object-fit: cover; /* Растягивает видео, сохраняя пропорции, чтобы заполнить блок */
-  object-position: center; /* Всегда центрирует видео по вертикали и горизонтали */
+  /* Magic happens here: */
+  object-fit: cover; /* Stretches the video, maintaining proportions to fill the block */
+  object-position: center; /* Always centers the video vertically and horizontally */
   
-  transform: translate(-50%, -50%); /* Дополнительная подстраховка для центровки */
+  transform: translate(-50%, -50%);
   z-index: -1;
 }
 

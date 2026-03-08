@@ -1,4 +1,4 @@
--- 1. Создание таблицы пользователей
+-- 1. Creating the users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Создание таблицы для хранения сессий (стандарт для connect-pg-simple)
+-- 2. Creating the table to store sessions (standard for connect-pg-simple)
 CREATE TABLE "session" (
     "sid" varchar NOT NULL COLLATE "default",
     "sess" json NOT NULL,

@@ -1,15 +1,14 @@
 
-const express = require('express');// 1. Подключаем библиотеку Express
-const path = require('path'); // Встроенный модуль для работы с путями
-const { Client, Pool } = require('pg');// pg — «переводчик» для работы с базой PostgreSQL.
-const bcrypt = require('bcrypt'); // библиотека шифровки пароля!
-const multer = require('multer'); //для безопасности и надежности загрузки файлов в Node.js.
-const fs = require('fs');// fs (File System) — позволяет серверу работать с файлами: читать, удалять и создавать их.
-const session = require('express-session');//позволяет серверу "узнавать" пользователя между запросами, создавая уникальную сессию (временную память).
-const pgSession = require('connect-pg-simple')(session); // Подключаем хранилище сессий.
+const express = require('express');// Import the Express library
+const path = require('path');// Built-in module for working with paths
+const { Client, Pool } = require('pg');// pg — a “translator” for working with the PostgreSQL database.
+const bcrypt = require('bcrypt'); // Password encryption library!
+const multer = require('multer');// For secure and reliable file uploads in Node.js.
+const fs = require('fs');// fs (File System) — allows the server to work with files: read, delete, and create them.
+const session = require('express-session');// Allows the server to “recognize” the user between requests by creating a unique session (temporary memory).
+const pgSession = require('connect-pg-simple')(session); // Import the session store.
 
-
-require('dotenv').config();// Загружает секретные данные (пароли, ключи) из файла .env в память сервера
+require('dotenv').config();// Loads secret data (passwords, keys) from the .env file into the server’s memory
 
 const { createClient } = require('redis');
 const { sendVerificationCode } = require('./services/authService');
@@ -18,9 +17,9 @@ const redisClient = createClient({ url: process.env.REDIS_URL });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 redisClient.connect().then(() => console.log('Connected to Redis in server.js'));
-// 2. Создаем экземпляр нашего приложения (сервера)
+//  Create an instance of our application (server)
 const app = express();
-// 3. Указываем серверу порт (на каком "канале" он будет вещать)
+// Specify the port for the server (which "channel" it will broadcast on)
 const PORT = process.env.PORT || 3000;
 
 const pgPool = new Pool({
@@ -31,19 +30,19 @@ const pgPool = new Pool({
     port: process.env.DB_PORT,
 });
 
-// 4. ГЛАВНОЕ: Указываем серверу, где лежат твои картинки, стили и HTML.
+// Specify the server location for your images, styles, and HTML.
 app.use(express.static(path.join(__dirname, '../client')));
-// 5. Позволяем серверу понимать JSON, который присылает твой fetch
+//  Allow the server to parse JSON sent by your fetch.
 app.use(express.json());
 
 
 app.use(session({
     store: new pgSession({
-        pool: pgPool,                // Твой пул подключений к БД
-        tableName: 'session',        // Имя таблицы, которую мы создали выше
-        pruneSessionInterval: 60 * 15, // 15min - Как часто проверять и удалять из базы данных "протухшие" (старые) сессии
+        pool: pgPool,                // Database connection pool
+        tableName: 'session',        // The name of the table I created
+        pruneSessionInterval: 60 * 15, // 15min - How often to check and delete "expired" (old) sessions from the database
     }),
-    secret: process.env.SESSION_PASSWORD, // любая длинная строка
+    secret: process.env.SESSION_PASSWORD, // any long string
     resave: false,
     saveUninitialized: false,
     rolling: true,
@@ -76,19 +75,18 @@ app.get('/check-auth', (req, res) => {
 });
 
 
-
-// Проверяем, что пул может достучаться до базы
+// Verify that the pool can reach the database
 pgPool.connect()
     .then(client => {
         console.log('Database connected successfully via Pool');
-        client.release(); // Освобождаем соединение обратно в пул
+        client.release(); // Release the connection back to the pool
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
     })
     .catch(err => {
         console.error('Database connection error:', err);
-        process.exit(1);// Остановить сервер, если базы нет
+        process.exit(1);// Stop the server if the database is unavailable
     });
 
 app.post('/register', async (req,res) => {
@@ -179,11 +177,11 @@ app.post('/resend-code', async (req, res) => {
             });
         }
 
-        // 1. Отправляем новый код (это создаст новый код в Redis на 5 минут)
+        //  Send a new code (this will create a new code in Redis for 5 minutes)
         await sendVerificationCode(email); 
 
-        // 2. ВОТ ОНО: Продлеваем жизнь данных пользователя в Redis ещё на 5 минут (300 сек)
-        // Теперь счетчик сбросится обратно на 5 минут
+        // Extend the TTL (time-to-live) for user data in Redis for another 5 minutes (300 sec)
+        // The counter will now reset back to 5 minutes
         await redisClient.expire(`pending_user:${email}`, 300);
 
         res.json({ success: true, message: 'New code sent!' });
@@ -202,11 +200,11 @@ app.post('/login', async (req, res) => {
         const user = result.rows[0];
 
         if (user) {
-            // Пользователь найден, проверяем пароль
+            // User found, checking password
             const isMatch = await bcrypt.compare(password, user.password_hash);
 
             if (isMatch) {
-                // ПАРОЛЬ ВЕРНЫЙ
+                // PASSWORD IS CORRECT
                 req.session.user = { 
                     id: user.id, 
                     username: user.username, 
@@ -214,7 +212,7 @@ app.post('/login', async (req, res) => {
                     avatar_url: user.avatar_url 
                 };
 
-                // Отправляем данные пользователя обратно клиенту
+                // Send user data back to the client
                 res.status(200).json({ 
                     success: true,
                     username: user.username, 
@@ -222,7 +220,7 @@ app.post('/login', async (req, res) => {
                     avatar_url: user.avatar_url 
                 });
             } else {
-                // ПАРОЛЬ НЕВЕРНЫЙ
+                // PASSWORD IS INCORRECT
                 console.log("Incorrect password for:", email);
                 res.status(401).json({ 
                     error: 'INVALID_PASSWORD', 
@@ -230,7 +228,7 @@ app.post('/login', async (req, res) => {
                 });
             }
         } else {
-            // ТАКОЙ EMAIL НЕ ЗАРЕГИСТРИРОВАН
+            // USER NOT FOUND
             res.status(401).json({ 
                 error: 'USER_NOT_FOUND', 
                 message: 'User with this email not found' 
@@ -280,7 +278,7 @@ app.post('/update-username', async (req, res) =>{
     }
 })
 
-//--------Изменение пароля.
+//--------Password change.
 app.post('/update-password', async (req,res) =>{
     try{
         const { oldPassword, newPassword } = req.body;
@@ -317,15 +315,15 @@ app.post('/update-password', async (req,res) =>{
     }
 })
 
-//------Настройка места хранения---- Авто-создание папки, если её нет
+//------Storage configuration---- Auto-create folder if it doesn't exist
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir);
 }
-//---Создание имени картинки.
+//---Image filename creation.
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, uploadDir); // Используем абсолютный путь
+        cb(null, uploadDir); // Using the absolute path
     },
     filename: (req, file, cb) => {
 
@@ -336,7 +334,7 @@ const storage = multer.diskStorage({
     }
 });
 
-//  Фильтр безопасности: только изображения
+// Security filter: images only
 const fileFilter = (req, file, cb) => {
     if(file.mimetype.startsWith('image/')){
         cb(null, true);
@@ -345,16 +343,16 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-//----ограничения по объему картинки.
+//----Image size limits.
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // Ограничение 5 МБ
+    limits: { fileSize: 5 * 1024 * 1024 } // 5 MB limit
 })
-// Делаем папку 'uploads' публичной, чтобы браузер мог загружать из неё картинки
+// Make the 'uploads' folder public so the browser can load images from it
 app.use('/uploads', express.static(uploadDir));
 
-//---Загрузка аватара в аккаунт
+//---Account avatar upload
 app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
     try {
         if (!req.session.user){
@@ -367,13 +365,13 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         const userEmail = req.session.user.email;
         const newAvatarUrl = `/uploads/${req.file.filename}`;
 
-        // 1. Ищем старую аватарку в БД
+        // Searching for the old avatar in the DB
         const userResult = await pgPool.query('SELECT avatar_url FROM users WHERE email =$1', [userEmail]);
         const oldAvatarUrl = userResult.rows[0]?.avatar_url;
 
-        // 2. Удаляем старый файл, если он есть
+        // Delete the old file if it exists
         if (oldAvatarUrl) {
-            // Убираем / в начале (/uploads/file.jpg -> uploads/file.jpg)
+            // Strip the leading slash (/uploads/file.jpg -> uploads/file.jpg)
             const relativePath = oldAvatarUrl.startsWith('/') ? oldAvatarUrl.slice(1) : oldAvatarUrl;
             const oldPath = path.join(__dirname, relativePath);
 
@@ -383,7 +381,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
             }
         }
 
-        // 3. Обновляем БД и Сессию
+        // Updating the DB and Session
         await pgPool.query('UPDATE users SET avatar_url = $1 WHERE email = $2', [newAvatarUrl, userEmail]);
         req.session.user.avatarUrl = newAvatarUrl;
 
@@ -395,7 +393,7 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
 
     } catch (err) {
         console.error('Upload error details:', err);
-        // Если это ошибка Multer (например, файл большой), отправим понятный текст
+        // If it's a Multer error (e.g., file too large), send a user-friendly message
         if (err.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).json({ 
                 error: 'FILE_TOO_LARGE', 
@@ -408,9 +406,9 @@ app.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
         });
     }
 });
-//--Выход из аккаунта.
+//--Account logout.
 app.post('/logout', (req, res) => {
-    // Команда destroy полностью удаляет сессию из "блокнота" сервера
+// The destroy command completely removes the session from the server's "notebook"
     req.session.destroy((err) => {
         if (err) {
             console.error('Error during logout:', err);
@@ -420,7 +418,7 @@ app.post('/logout', (req, res) => {
             }
             );
         }
-        // Очищаем куку в браузере пользователя
+        // Clear the cookie in the user's browser
         res.clearCookie('connect.sid'); 
         res.status(200).json({ 
             success: true, 
@@ -429,9 +427,9 @@ app.post('/logout', (req, res) => {
         );
     });
 });
-//--Удаление аккаунта.
+//--Account deletion.
 app.delete('/delete-account', async (req, res) => {
-    // Если сессии нет, возвращаем 401 и поясняем причину
+    // If there's no session, return 401 and explain the reason
     if(!req.session.user){
         return res.status(401).json({ error: 'Unauthorized: No active session found' });
     }
@@ -448,23 +446,23 @@ app.delete('/delete-account', async (req, res) => {
 
             if(fs.existsSync(fullPath)){
                 fs.unlinkSync(fullPath);
-                // Это сообщение ты увидишь в ТЕРМИНАЛЕ (на сервере)
+                // This message is in the TERMINAL (on the server)
                 console.log(`File deleted: ${fullPath}`);
             }
         }
         
-        // Удаляем запись из БД
+        // Removing the record from the DB
         await pgPool.query('DELETE FROM users WHERE email = $1', [userEmail]);
 
-        // Уничтожаем сессию
+        // Destroying the session
         req.session.destroy((err) =>{
             if(err){
                 console.error('Error while destroying the session:', err);
-                // Это ты увидишь в БРАУЗЕРЕ (Network tab), если сессия не удалится
+                // This is what you'll see in the BROWSER (Network tab), if the session doesn't get deleted
                 return res.status(500).json({ error: 'Session destruction failed', details: err.message });
             }
             res.clearCookie('connect.sid');
-            // Успешный финал: понятно и лаконично
+
             res.status(200).json({ 
                 success: true, 
                 message: 'Account and associated files deleted successfully' 
@@ -472,7 +470,7 @@ app.delete('/delete-account', async (req, res) => {
         })
     } catch (err) {
         console.error('Error during the account deletion process:', err);
-        // Если база данных "упадет" или случится другая системная ошибка
+        // If the database "crashes" or another system error occurs
         res.status(500).json({ 
             success: false, 
             error: 'Server internal error during deletion',
@@ -481,7 +479,7 @@ app.delete('/delete-account', async (req, res) => {
     }
 });
 
-//-----Министерство Чрезвычайных Ситуаций
+//-----Emergency Situations Ministry
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {

@@ -32,7 +32,7 @@ const modalOkBtn = document.getElementById('modalOkBtn');
 const avatarInput = document.getElementById('avatarInput');
 const avatarPlayer = document.getElementById('avatarPlayer');
 
-//-----Форма для регистрации аккаунтов.
+//-----Account registration form.
 const signUpForm = document.getElementById('signUpForm');
 const loginInputSignUpForm = document.getElementById('loginInputSignUpForm');
 const emailInputSignUpForm = document.getElementById('emailInputSignUpForm');
@@ -52,17 +52,17 @@ const warningInCorrectPass = document.getElementById('warningInCorrectPass');
 
 const logoutButton = document.getElementById('logoutButton');
 const bthDelete = document.getElementById('bthDelete');
-//-----Форма для входа в аккаунт.
+//-----Login form.
 const signInForm = document.getElementById('signInForm');
 const logInEmailInput = document.getElementById('logInEmailInput');
 const logInPasswordInput = document.getElementById('logInPasswordInput');
-//-----Форма для смены логина в аккаунт.
+//-----Form for changing the login in the account.
 const avatarUploadMessage = document.getElementById('avatarUploadMessage');
 const changeNameForm = document.getElementById('changeNameForm');
 const newLoginMessage = document.getElementById('newLoginMessage');
 const loginPlayers = document.getElementById('loginPlayers');
 
-//-----Форма для смены пароля в аккаунт.
+//-----Form for changing the password in the account.
 const changePasswordForm = document.getElementById('changePasswordForm');
 const oldPassPlayer = document.getElementById('oldPassPlayer');
 const newPassPlayer = document.getElementById('newPassPlayer');
@@ -75,7 +75,7 @@ const modalTitle = document.getElementById('modalTitle');
 
 
 let isAuthenticated = false;
-// Вызываем функцию проверки СРАЗУ при загрузке страницы
+// Call the verification function IMMEDIATELY when the page loads
 const checkAuth = async () => {
     try {
         const response = await fetch('/check-auth');
@@ -104,18 +104,18 @@ const checkAuth = async () => {
 
 checkAuth();
 
-// Глобальная функция перевода
+// Global language translation function.
 const getTranslation = (key) => {
     const currentLang = localStorage.getItem('lang') || 'en';
     return translations[currentLang][key] || key;
 };
 
 const clearUIStatusMessages = () => {
-    // Очищаем сообщения об успехе/ошибках смены логина и пароля
+    // Clear success/error messages for login and password changes
     if (newLoginMessage) newLoginMessage.textContent = '';
     if (passwordMessage) passwordMessage.textContent = '';
     
-    // Очищаем ошибки входа и регистрации
+    // Clear login and registration errors
     if (warningInCorrectPass) {
         warningInCorrectPass.textContent = '';
         warningInCorrectPass.style.display = 'none';
@@ -124,7 +124,7 @@ const clearUIStatusMessages = () => {
     if (signUpSuccessfullText) signUpSuccessfullText.textContent = '';
 };
 /* =========================
-  МЕНЮ: открыть/закрыть
+  MENU: open / close
    ========================= */
 function openMenu() {
   if (!sideMenu || !menuBtn) return;
@@ -149,7 +149,7 @@ function toggleMenu() {
   }
 }
 /* =========================
-    ФОРМЫ: Sign up / Sign in
+    FORMS: Sign Up / Sign In
    ========================= */
 
 function showSignUp() {
@@ -170,7 +170,7 @@ function hideAuthForms() {
 }
 
   /* =========================
-      ЯЗЫК: открыть/закрыть
+      LANGUAGE: open / close
    ========================= */
 
 function closeLang() {
@@ -183,13 +183,13 @@ function toggleLang() {
 }
 
 /* =========================
-    ВОССТАНОВЛЕНИЕ ЯЗЫКА
+    LANGUAGE RECOVERY
    ========================= */
 
-//  Кнопка Language (открыть/закрыть попап)
+// Language button (open/close popup)
 if (langBtn) {
   langBtn.addEventListener('click', (e) => {
-    // чтобы клик не дошёл до document.click (который закрывает попап)
+    // Prevent the click from reaching document.click (which closes the popup)
     e.stopPropagation();
     toggleLang();
   });
@@ -214,7 +214,7 @@ if (langBtnText) {
   langBtnText.textContent = initialLang.toUpperCase() ;
 }
 
-// 4) Выбор языка внутри popUp
+//  Language selection inside the popUp
 if (langPopup) {
   langPopup.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-lang]');
@@ -222,7 +222,7 @@ if (langPopup) {
 
     const lang = btn.dataset.lang;
 
-    // сохраняем выбор
+    // Save the selection
     localStorage.setItem('lang', lang);
 
     if (langBtnText) {
@@ -230,26 +230,25 @@ if (langPopup) {
 }
 
 
-    // закрываем попап
+    // Close the popup
     closeLang();
 
-    // здесь ты можешь позже добавить реальную смену языка:
     setLanguage(lang);
   });
 }
 
 /* =========================
-  ОБРАБОТЧИКИ СОБЫТИЙ
+  EVENT HANDLERS
    ========================= */
 
-// 1) Кнопка открытия меню (бургер)
+// Menu open button (burger)
 if (menuBtn) {
   menuBtn.addEventListener('click', () => {
     toggleMenu();
   });
 }
 
-// 2) Кнопка X закрыть меню
+//  X button to close the menu
 if (btnX_Menu) {
   btnX_Menu.addEventListener('click', () => {
     closeMenu();
@@ -261,27 +260,27 @@ document.addEventListener('click', (e) => {
   const isMenuOpen = sideMenu.classList.contains('active');
   if (!isMenuOpen) return;
 
-  // если клик НЕ внутри меню И НЕ по кнопке бургер
+// if the click is NOT inside the menu AND NOT on the burger button
   if (!sideMenu.contains(e.target) && e.target !== menuBtn) {
     closeMenu();
   }
 });
 
-// 5) Открытие формы Sign up
+// Open the Sign Up form
 if (openSignUp) {
   openSignUp.addEventListener('click', (e) => {
     e.preventDefault();
     showSignUp();
   });
 }
-// 6) Открытие формы Sign in
+//  Open the Sign In form
 if (openSignIn) {
   openSignIn.addEventListener('click', (e) => {
     e.preventDefault();
     showSignIn();
   });
 }
-// 7) Клик вне блока языка — закрыть popUp 
+//  Click outside the language block — close the popUp
 document.addEventListener('click', (e) => {
   if (!langRoot) return;
 
@@ -289,14 +288,13 @@ document.addEventListener('click', (e) => {
     closeLang();
   }
 });
-// 8) Escape — закрыть всё, что “всплывающее”
+// Escape — close everything that is “popup”
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  // закрыть формы входа/регистрации
+  // Close the login/registration forms
   hideAuthForms();
-  // закрыть popUp языка
+
   closeLang();
-  // закрыть меню
   closeMenu();
 });
 
@@ -313,16 +311,16 @@ function markSelected(color) {
     btn.classList.toggle('selected', btn.dataset.bg === color);
   });
 }
-// 1) При загрузке: раскрасим кнопки и восстановим выбор
+//  On load: style the buttons and restore the selection
 document.querySelectorAll('.themeColor').forEach(btn => {
-  // установим цвет квадратика из data-bg
+  // Set the square color from data-bg
   btn.style.setProperty('--c', btn.dataset.bg);
 });
 if (savedBg) {
   setBodyBackground(savedBg);
   markSelected(savedBg);
 }
-// 2) Клик по цвету
+// Click on a color
 if (themeGrid) {
   themeGrid.addEventListener('click', (e) => {
     const btn = e.target.closest('.themeColor');
@@ -334,7 +332,7 @@ if (themeGrid) {
   });
 }
 
-// -------отображения пароля в виде текст,смена картинки.
+// -------display password as text, change the image.
 function setupPasswordToggle(buttonId, wrapperId) {
   const btn = document.getElementById(buttonId);
   const wrap = document.getElementById(wrapperId);
@@ -348,8 +346,7 @@ function setupPasswordToggle(buttonId, wrapperId) {
     const isHidden = input.type === 'password';
     input.type = isHidden ? 'text' : 'password';
 
-    // Исправленная логика поиска иконки:
-    // Если сама кнопка это IMG — берем её. Если нет — ищем IMG внутри.
+// If the button itself is an IMG — use it. If not — find the IMG inside.
     const icon = btn.tagName === 'IMG' ? btn : btn.querySelector('img');
 
     if (icon) {
@@ -365,7 +362,7 @@ setupPasswordToggle('btnPassIconIn', 'iconPassIn');
 setupPasswordToggle('btnPassIconOld', 'wrapperOldPass');
 setupPasswordToggle('btnPassIconNew', 'wrapperNewPass');
 
-// ------Открытие и закрытие модального окна.
+// ------Opening and closing the modal window.
 function openModalWindow() {
     closeMenu(); 
     modalOverlay.style.display = 'flex';
@@ -388,7 +385,7 @@ modalOverlay.addEventListener('click', (e) => {
     }
 });
 
-//-------Меняем аватарку внутри аккаунта.----
+//-------Change the avatar inside the account.----
 avatarInput.addEventListener('change', async () => {
   const file = avatarInput.files && avatarInput.files[0];
   if(!file){
@@ -418,9 +415,11 @@ avatarInput.addEventListener('change', async () => {
         console.error('Network error:', err);
     }
 });
-//-------Сохраняем значение из ввода в PostgreSQL.-----
+//-------Save the input value to PostgreSQL.-----
 
-let tempEmail = ""; // Сюда сохраним почту, чтобы она не потерялась после очистки формы
+let tempEmail = ""; 
+// Store the email here so it isn’t lost after clearing the form
+
 signUpForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const username = loginInputSignUpForm.value;
@@ -434,10 +433,10 @@ signUpForm.addEventListener('submit', async (event) => {
             body: JSON.stringify({ username, email, password }),
         });
 
-        const data = await response.json(); // Добавили, чтобы читать ошибки от сервера
+        const data = await response.json(); // Added to read errors from the server
 
         if (response.ok) {
-            tempEmail = email; // ЗАПОМИНАЕМ email перед тем как очистить форму
+            tempEmail = email; // Remember the email before clearing the form
             
             startRegistrationTimer(300);
 
@@ -446,7 +445,7 @@ signUpForm.addEventListener('submit', async (event) => {
 
         } else {
           warningTextBlockSignUp.style.display = 'block';
-          // Проверяем тип ошибки, который прислал сервер
+          // Check the type of error sent by the server
           if (data.error === 'USER_EXISTS') {
               warningTextBlockSignUp.textContent = getTranslation('UserAlreadyExists');
           } else {
@@ -459,14 +458,14 @@ signUpForm.addEventListener('submit', async (event) => {
     }
 });
 
-let countdownInterval; // Глобальная переменная для управления таймером
+let countdownInterval; // Global variable for managing the timer
 function startRegistrationTimer(durationInSeconds) {
     const timerContainer = document.getElementById('timerDisplay');
 
-    // Сброс предыдущего таймера, если он был
+    // Reset the previous timer, if any
     clearInterval(countdownInterval);
     timerContainer.style.display = 'block';
-    resendCode.style.pointerEvents = 'none'; // Отключаем кнопку переотправки, пока идет таймер
+    resendCode.style.pointerEvents = 'none';// Disable the resend button while the timer is running
     resendCode.style.opacity = '0.5';
 
     let timer = durationInSeconds;
@@ -475,7 +474,6 @@ function startRegistrationTimer(durationInSeconds) {
         let minutes = Math.floor(timer / 60);
         let seconds = timer % 60;
 
-        // Форматируем 0:9 в 0:09
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
@@ -484,7 +482,7 @@ function startRegistrationTimer(durationInSeconds) {
         if (--timer < 0) {
             clearInterval(countdownInterval);
             display.textContent = "00:00";
-            // Когда время вышло, разрешаем переотправку
+            // When time is up, allow resending
             resendCode.style.pointerEvents = 'auto';
             resendCode.style.opacity = '1';
             resendCode.style.cursor = 'pointer';
@@ -501,7 +499,7 @@ verificationForm.addEventListener('submit', async (e) => {
         const response = await fetch('/verify-registration', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: tempEmail, code }) // Используем сохраненный tempEmail
+            body: JSON.stringify({ email: tempEmail, code }) // Use the saved tempEmail
         });
 
         const data = await response.json();
@@ -554,14 +552,14 @@ resendCode.addEventListener('click', async () => {
     }
 });
 
-//------- Форма  входа в аккаунт.----
+//-------Account login form.----
 signInForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const email = logInEmailInput.value;
     const password = logInPasswordInput.value;
 
-    // Скрываем старую ошибку перед новым запросом
+   // Hide the old error before making a new request
     warningInCorrectPass.style.display = 'none'; 
     warningInCorrectPass.textContent = '';
 
@@ -578,7 +576,7 @@ signInForm.addEventListener('submit', async (event) => {
         if (response.ok) {
             const userData = await response.json();
 
-            // Успех: заполняем профиль
+            // Success: populate the profile
             loginPlayer.textContent = userData.username;
             emailPlayer.textContent = userData.email;
 
@@ -587,10 +585,10 @@ signInForm.addEventListener('submit', async (event) => {
             lobbyPlayerAkk.style.display = 'block';
             moveThemeCard(true);
 
-            hideAuthForms(); // Закрываем окно входа
+            hideAuthForms();// Close the login window
 
         } else {
-            // СЕРВЕР ОТВЕТИЛ ОШИБКОЙ (401, 404 и т.д.)
+            // SERVER RESPONDED WITH AN ERROR (401, 404, etc.)
             warningInCorrectPass.textContent = getTranslation('IncorrectEMailorPass');
             warningInCorrectPass.style.display = 'block';
         }
@@ -600,7 +598,7 @@ signInForm.addEventListener('submit', async (event) => {
         warningInCorrectPass.style.display = 'block';
     }
 });
-//----- сменa логина в аккаунт.
+//-----Change the login in the account.
 changeNameForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -642,7 +640,7 @@ changeNameForm.addEventListener('submit', async (event) => {
       newLoginMessage.style.color = 'red';
     }
 });
-//----- сменa пароля в аккаунт.
+//-----Change the password in the account.
 changePasswordForm.addEventListener('submit', async(event) =>{
   event.preventDefault();
 
@@ -669,11 +667,11 @@ changePasswordForm.addEventListener('submit', async(event) =>{
       oldPassPlayer.value = '';
       newPassPlayer.value = '';
     }else if (response.status === 401) {
-      // Прямое указание текста при неверном пароле
+      // Directly specify the text for an incorrect password
       passwordMessage.textContent = getTranslation('pass_err_old');
       passwordMessage.style.color = '#8B1E1E';
     } else {
-      // Для всех остальных ошибок (500 и т.д.)
+      // For all other errors (500, etc.)
       passwordMessage.textContent = getTranslation('pass_err_fail');
       passwordMessage.style.color = '#8B1E1E';
     }
@@ -684,24 +682,23 @@ changePasswordForm.addEventListener('submit', async(event) =>{
   }
 })
 
-//-------Выходим из аккаунта.--------
+//-------Log out of the account.--------
 logoutButton.addEventListener('click', async () => {
     try {
-        // 1. Сообщаем серверу, что мы выходим
+        // Notify the server that we are logging out
         const response = await fetch('/logout', { method: 'POST' });
 
         if (response.ok) {
-            // 2. Если сервер подтвердил выход, сбрасываем состояние
+            // If the server confirmed the logout, reset the state
             isAuthenticated = false;
 
 
-            // 3. Переключаем видимость (твой старый код)
+            //  Toggle visibility (your old code)
             showSignIn();
             lobbyMenu.style.display = 'block';
             lobbyPlayerAkk.style.display = 'none';
             moveThemeCard(false);
 
-            // Опционально: очищаем поля на экране аккаунта
             loginPlayer.textContent = '';
             emailPlayer.textContent = '';
 
@@ -714,7 +711,7 @@ logoutButton.addEventListener('click', async () => {
         console.error('Network error during logout:', err);
     }
 });
-// -----Предупреждение о Удаление сохраненных логин и пароля.-----
+// -----Warning about deleting saved login and password.-----
 bthDelete.addEventListener('click', (e) =>{
   if(e){
     modalBody.textContent = getTranslation('confirm_delete');
@@ -725,7 +722,7 @@ bthDelete.addEventListener('click', (e) =>{
   }
     
 })
-// -----Удаление сохраненных логин и пароля.-----
+// -----Deleting saved login and password.-----
 modalDeleteBtn.addEventListener('click', async (e) => {
 
     try{

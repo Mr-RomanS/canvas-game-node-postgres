@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 async function sendVerificationCode(email){
     const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await redisClient.set(`verify:${email}`, code , {EX: 300});//код удалится сам через 5 минут
+    await redisClient.set(`verify:${email}`, code , {EX: 300});// The code will delete itself after 5 minutes
 
     const mailOptions = {
         from: `"My Game" <${process.env.EMAIL_USER}>`,
