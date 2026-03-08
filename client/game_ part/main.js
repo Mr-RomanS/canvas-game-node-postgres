@@ -187,7 +187,7 @@ let bonusImgLoaded = false;
 bonusImg.onload = () => { bonusImgLoaded = true; };
 
 const healthImg = new Image();
-healthImg.src = "./image/medizin.svg";
+healthImg.src = "./images/game_icons/medizin.svg";
 let healthImgLoaded = false;
 healthImg.onload = () => { healthImgLoaded = true; };
 
